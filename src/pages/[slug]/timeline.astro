@@ -1,0 +1,21 @@
+---
+import MemorialLayout from '../../layouts/MemorialLayout.astro';
+import Timeline from '../../components/Timeline.astro';
+import { loadMemorial, memorialPathsWith } from '../../lib/memorial';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('timeline');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+---
+
+<MemorialLayout
+  data={data}
+  section="timeline"
+  title="خط زمانی"
+  description="رویدادهای زندگی به ترتیب زمان، با تفکیک تاریخ‌های دقیق از تقریبی."
+  lead="نقطهٔ توپر یعنی تاریخ دقیق و نقطهٔ خط‌چین یعنی تاریخ تقریبی."
+>
+  <Timeline slug={data.slug} events={data.timeline} galleryById={data.galleryById} calendar={data.calendar} level={2} />
+</MemorialLayout>

@@ -1,0 +1,114 @@
+---
+// Photo collage that appears piece by piece while scrolling.
+// - Mouse: hover dims the photo and shows its caption over it.
+// - Touch: first tap shows the caption, second tap opens the gallery.
+// - Tall/short tiles drift at slightly different speeds (CSS scroll-driven animation, compositor only).
+import type { CollectionEntry } from 'astro:content';
+import { loc, t, type Lang } from '../lib/i18n';
+import { asset } from '../lib/url';
+import Icon from './Icon.astro';
+
+interface Props {
+  items: CollectionEntry<'gallery'>[];
+  lang?: Lang;
+  /** Where each photo links to (the full gallery). */
+  to: string;
+  /** Show the one-line "how to use" hint under the collage. */
+  hint?: boolean;
+}
+const { items, lang = 'fa', to, hint = true } = Astro.props;
+---
+
+<div class="collage-wrap">
+  <ul class:list={['collage', { few: items.length < 6, one: items.length === 1 }]}>
+    {
+      items.map((g, i) => (
+        <li class:list={['reveal', `p${i % 6}`]} style={`--i:${i % 4}`}>
+          <a href={`${to}#photo-${g.data.id}`} data-collage-tile>
+            <img src={asset(g.data.src)} alt={loc(g.data.alt, lang)} loading="lazy" decoding="async" width={g.data.width} height={g.data.height} />
+            <span class="cap">
+              <strong>{loc(g.data.title, lang)}</strong>
+              <span>{loc(g.data.caption, lang)}</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    hint && (
+      <p class="hint">
+        <Icon name="hand" size={20} />
+        <span class="coarse">{t(lang, 'tapPhotoHint')}</span>
+        <span class="fine">{t(lang, 'hoverPhotoHint')}</span>
+      </p>
+    )
+  }
+</div>
+
+<script>
+  // Touch only: the first tap reveals the caption, the second follows the link.
+  if (window.matchMedia('(hover: none)').matches) {
+    document.addEventListener('click', (e) => {
+      const tile = (e.target as HTMLElement).closest<HTMLElement>('[data-collage-tile]');
+      document.querySelectorAll('[data-collage-tile].show').forEach((el) => { if (el !== tile) el.classList.remove('show'); });
+      if (!tile) return;
+      if (!tile.classList.contains('show')) {
+        e.preventDefault();
+        tile.classList.add('show');
+      }
+    });
+  }
+</script>
+
+<style>
+  .collage {
+    list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 9rem; grid-auto-flow: dense; gap: var(--s-1);
+  }
+  .collage.one { grid-template-columns: 1fr; grid-auto-rows: 16rem; }
+  /* An odd last tile spans the full row so a phone never shows a hole. */
+  .collage.few:not(.one) li:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  @media (min-width: 48em) {
+    .collage { grid-template-columns: repeat(4, 1fr); grid-auto-rows: 11rem; gap: var(--s-2); }
+    .collage.few { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+    .collage.few:not(.one) li:last-child:nth-child(odd) { grid-column: auto; }
+    .collage.one { grid-template-columns: 1fr; grid-auto-rows: 22rem; }
+    /* The span pattern tiles perfectly for exactly 6 photos; fewer photos use a plain grid. */
+    .collage:not(.few) .p0 { grid-column: span 2; grid-row: span 2; }
+    .collage:not(.few) .p3, .collage:not(.few) .p5 { grid-row: span 2; }
+    .collage:not(.few) .p4 { grid-column: span 2; }
+  }
+  .collage:not(.few) .p0 { grid-row: span 2; }
+  li { position: relative; overflow: hidden; border-radius: var(--radius); background: var(--paper-2); }
+  a { display: block; inline-size: 100%; block-size: 100%; position: relative; -webkit-tap-highlight-color: transparent; }
+  img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  /* Dimming layer: only its opacity animates (cheap on phones, unlike a live blur). */
+  a::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgb(12 10 8 / 0.82), rgb(12 10 8 / 0.45)); opacity: 0; transition: opacity 0.35s ease; z-index: 1; }
+  .cap {
+    position: absolute; inset-inline: 0; inset-block-end: 0; z-index: 2; padding: var(--s-2); color: #fff; display: grid; gap: 0.2rem;
+    opacity: 0; transform: translateY(10px); transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .cap strong { font-size: 1rem; }
+  .cap span { font-size: 0.9rem; line-height: 1.7; }
+  @media (hover: hover) {
+    li:hover a::before, a:focus-visible::before { opacity: 1; }
+    li:hover .cap, a:focus-visible .cap { opacity: 1; transform: none; }
+    li:hover img { transform: scale(1.06); }
+  }
+  a.show::before { opacity: 1; }
+  a.show .cap { opacity: 1; transform: none; }
+
+  .hint { display: flex; align-items: center; gap: 0.5rem; margin: var(--s-2) 0 0; color: var(--ink-faint); font-size: 0.9rem; }
+  .fine { display: none; }
+  @media (hover: hover) { .coarse { display: none; } .fine { display: inline; } }
+
+  /* Gentle drift: alternate tiles move a little faster while they cross the screen. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .collage:not(.one) li:nth-child(even) { animation: drift linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+      @keyframes drift { from { translate: 0 1.4rem; } to { translate: 0 -1.4rem; } }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) { img, .cap, a::before { transition: none; } }
+</style>

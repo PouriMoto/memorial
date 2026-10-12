@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages
+
+# NOTE: this workflow has NOT been run yet (no repository exists). It is
+# prepared from the documented GitHub Pages pattern; see README.md → Deployment.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Project sites are served from https://<owner>.github.io/<repo>/.
+      # These are derived automatically, so no username/repository is hardcoded.
+      # If you use a custom domain or a user site (<owner>.github.io repo),
+      # set SITE_URL to that URL and BASE_PATH to "/".
+      SITE_URL: https://${{ github.repository_owner }}.github.io
+      BASE_PATH: /${{ github.event.repository.name }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate content
+        run: npm run validate
+      - name: Type check
+        run: npm run check
+      - name: Build
+        run: npm run build
+      - name: Check internal links
+        run: npm run check:links
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,33 @@
+---
+import MemorialLayout from '../../layouts/MemorialLayout.astro';
+import Timeline from '../../components/Timeline.astro';
+import { render } from 'astro:content';
+import { loadMemorial, memorialPathsWith } from '../../lib/memorial';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('biography');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+const bio = data.biography!;
+const { Content } = await render(bio);
+const related = data.timeline.filter((e) => e.data.milestone);
+---
+
+<MemorialLayout data={data} section="biography" title={bio.data.title} description={bio.data.description}>
+  <div class="prose"><Content /></div>
+
+  {
+    related.length > 0 && (
+      <section class="related" aria-labelledby="related-title">
+        <h2 id="related-title">رویدادهای مرتبط</h2>
+        <Timeline slug={data.slug} events={related} galleryById={data.galleryById} calendar={data.calendar} compact />
+        {data.has.timeline && <p><a class="link-arrow" href="../timeline/">مشاهدهٔ خط زمانی کامل</a></p>}
+      </section>
+    )
+  }
+</MemorialLayout>
+
+<style>
+  .related { margin-block-start: var(--s-5); padding-block-start: var(--s-3); border-block-start: var(--border); }
+</style>

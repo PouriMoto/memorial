@@ -1,0 +1,141 @@
+---
+// Horizontal "journey" through the milestones.
+// Default (no JS, reduced motion, narrow screens): a native horizontally scrollable, snap-aligned strip.
+// Enhanced (JS, wide screen, motion allowed): the section pins and vertical scrolling moves the strip sideways.
+import type { CollectionEntry } from 'astro:content';
+import { loc, t, type Lang } from '../lib/i18n';
+import { formatDate, type Calendar } from '../lib/format';
+import Icon from './Icon.astro';
+
+interface Props {
+  slug: string;
+  events: CollectionEntry<'timeline'>[];
+  lang?: Lang;
+  calendar?: Calendar;
+  storyPath: string;
+}
+const { events, lang = 'fa', calendar = 'gregory', storyPath } = Astro.props;
+const num = (n: number) => new Intl.NumberFormat(lang === 'fa' ? 'fa-IR' : 'en-GB').format(n);
+---
+
+<section class="journey" data-journey aria-labelledby="journey-title">
+  <div class="pin">
+    <div class="head wrap">
+      <h2 id="journey-title">{t(lang, 'milestones')}</h2>
+      <p class="hint">
+        <Icon name="hand" size={20} class="nudge" />
+        <span class="touch">{t(lang, 'swipeHint')}</span>
+        <span class="mouse js-only">{t(lang, 'journeyHint')}</span>
+      </p>
+    </div>
+    <div class="viewport" tabindex="0" role="group" aria-label={t(lang, 'swipeHint')}>
+      <ol class="track">
+        {
+          events.map((e, i) => (
+            <li class="card">
+              <span class="n" aria-hidden="true">{num(i + 1)}</span>
+              <p class="when"><time datetime={e.data.date}>{formatDate(e.data.date, e.data.precision, lang, calendar)}</time></p>
+              <h3>{loc(e.data.title, lang)}</h3>
+              <p>{loc(e.data.description, lang)}</p>
+              {e.data.storyId && <a class="link-arrow" href={`${storyPath}#ch-${e.data.storyId}`}>{t(lang, 'relatedStory')}</a>}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <div class="bar" aria-hidden="true"><span></span></div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-journey]');
+  if (root) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const wide = window.matchMedia('(min-width: 52em)');
+    const viewport = root.querySelector<HTMLElement>('.viewport')!;
+    const track = root.querySelector<HTMLElement>('.track')!;
+    const fill = root.querySelector<HTMLElement>('.bar span')!;
+    let raf = 0;
+    let overflow = 0;
+
+    const measure = () => {
+      const pad = parseFloat(getComputedStyle(viewport).paddingInlineStart) || 0;
+      overflow = Math.max(0, track.scrollWidth - (viewport.clientWidth - pad * 2));
+      // Vertical distance to scroll = horizontal distance to travel.
+      root.style.setProperty('--run', `${overflow}px`);
+    };
+    const update = () => {
+      raf = 0;
+      const rect = root.getBoundingClientRect();
+      const run = root.offsetHeight - window.innerHeight;
+      const p = run > 0 ? Math.min(1, Math.max(0, -rect.top / run)) : 0;
+      const dir = getComputedStyle(root).direction === 'rtl' ? 1 : -1;
+      track.style.transform = `translate3d(${dir * overflow * p}px,0,0)`;
+      fill.style.transform = `scaleX(${p})`;
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+
+    const enable = () => {
+      const on = wide.matches && !reduce.matches;
+      root.classList.toggle('pinned', on);
+      if (!on) {
+        track.style.transform = '';
+        window.removeEventListener('scroll', onScroll);
+        return;
+      }
+      measure();
+      update();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    };
+    enable();
+    wide.addEventListener('change', enable);
+    reduce.addEventListener('change', enable);
+    window.addEventListener('resize', () => { if (root.classList.contains('pinned')) { measure(); update(); } });
+  }
+</script>
+
+<style>
+  .journey { border-block-start: var(--border); padding-block: var(--s-5); background: var(--paper-2); }
+  .head { margin-block-end: var(--s-3); }
+  .hint { color: var(--ink-faint); margin: 0; font-size: 0.92rem; display: flex; align-items: center; gap: 0.5rem; }
+  .hint :global(.nudge) { animation: nudge 2.2s ease-in-out infinite; }
+  @keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-10px); } }
+  :global([dir='ltr']) .hint :global(.nudge) { animation-name: nudge-ltr; }
+  @keyframes nudge-ltr { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+  .mouse { display: none !important; }
+  .journey.pinned .touch { display: none; }
+  .journey.pinned .mouse { display: inline !important; }
+  .journey.pinned .hint :global(.nudge) { animation-name: bob; }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { .hint :global(.nudge) { animation: none !important; } }
+  .viewport { overflow-x: auto; scroll-snap-type: x proximity; padding-block: var(--s-2); padding-inline: var(--gutter, 1rem); }
+  .track { list-style: none; margin: 0; padding: 0; display: flex; gap: var(--s-3); inline-size: max-content; }
+  .card {
+    flex: 0 0 min(78vw, 22rem);
+    scroll-snap-align: center;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: var(--s-3);
+    min-block-size: 15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .n { font-size: 2.6rem; font-weight: 900; line-height: 1; color: transparent; -webkit-text-stroke: 1.2px var(--accent); }
+  .when { margin: 0; color: var(--accent); font-weight: 700; }
+  h3 { margin: 0; font-size: 1.2rem; }
+  .card p { margin: 0; }
+  .card .link-arrow { margin-block-start: auto; }
+  .bar { display: none; }
+
+  /* Pinned (enhanced) mode */
+  .journey.pinned { padding: 0; block-size: calc(100svh + var(--run, 0px)); }
+  .journey.pinned .pin { position: sticky; inset-block-start: 0; block-size: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .journey.pinned .viewport { overflow: hidden; padding-block: var(--s-3); }
+  .journey.pinned .track { will-change: transform; }
+  .journey.pinned .card { flex-basis: 24rem; min-block-size: 18rem; }
+  .journey.pinned .bar { display: block; margin: var(--s-3) auto 0; inline-size: min(24rem, 70vw); block-size: 3px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .journey.pinned .bar span { display: block; block-size: 100%; background: var(--accent); transform-origin: var(--origin, right); transform: scaleX(0); }
+  :global([dir='ltr']) .journey.pinned .bar span { transform-origin: left; }
+</style>

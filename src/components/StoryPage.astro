@@ -1,0 +1,292 @@
+---
+// The scrollytelling page. Rendered in Persian and English from the same content.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StoryHero from './StoryHero.astro';
+import StorySection from './StorySection.astro';
+import Journey from './Journey.astro';
+import Collage from './Collage.astro';
+import VideoEmbed from './VideoEmbed.astro';
+import MemoryCard from './MemoryCard.astro';
+import OrderCTA from './OrderCTA.astro';
+import Icon from './Icon.astro';
+import { loadMemorial } from '../lib/memorial';
+import { loc, t, hasEn, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+import { formatDate } from '../lib/format';
+import { features, activeChannels } from '../lib/site';
+
+interface Props {
+  slug: string;
+  lang: Lang;
+  /** true when rendering at "/" or "/en/" (canonical points to the memorial URL). */
+  isHome?: boolean;
+}
+const { slug, lang, isHome = false } = Astro.props;
+const data = await loadMemorial(slug);
+const m = data.memorial.data;
+const chapters = data.chapters(lang);
+const calendar = lang === 'fa' ? data.calendar : 'gregory';
+
+const milestones = data.timeline.filter((e) => e.data.milestone && (lang === 'fa' || (hasEn(e.data.title) && hasEn(e.data.description))));
+// Photos already shown inside chapters are not repeated in the closing collage.
+const usedInChapters = new Set(chapters.flatMap((c) => [...(c.data.imageId ? [c.data.imageId] : []), ...c.data.imageIds]));
+const spare = data.gallery.filter((g) => !usedInChapters.has(g.data.id));
+const spareFeatured = spare.filter((g) => g.data.featured);
+const photos = data.has.gallery ? (spareFeatured.length ? spareFeatured : spare).slice(0, 6) : [];
+const featuredVideos = data.videos.filter((v) => v.data.featured);
+const videos = data.has.videos ? (featuredVideos.length ? featuredVideos : data.videos).slice(0, 2) : [];
+// Memory texts are Persian, so the strip is shown on the Persian page only.
+const featuredMemories = data.memories.filter((x) => x.data.featured);
+const memories = lang === 'fa' && data.has.memories ? (featuredMemories.length ? featuredMemories : data.memories.slice(0, 3)) : [];
+
+const memorialPath = lang === 'en' ? `en/${slug}` : slug;
+const homePath = lang === 'en' ? 'en' : '';
+const pagePath = isHome ? homePath : memorialPath;
+const otherLang: Lang = lang === 'fa' ? 'en' : 'fa';
+const switchHref = href(isHome ? (otherLang === 'en' ? 'en' : '') : otherLang === 'en' ? `en/${slug}` : slug);
+
+const title = `${loc(m.name, lang)} | ${lang === 'fa' ? 'یادبود دیجیتال' : 'Digital Memorial'}`;
+const heroImage = m.heroImageId ? data.galleryById.get(m.heroImageId)?.data.src : undefined;
+
+const exploreText = {
+  biography: { fa: 'از آغاز تا پایان، در یک متن پیوسته.', en: 'From beginning to end, in one continuous text.' },
+  timeline: { fa: 'همهٔ رویدادها به ترتیب زمان.', en: 'Every recorded event in order.' },
+  gallery: { fa: 'تصویرها با شرح و مشخصات.', en: 'Photographs with captions and details.' },
+  keepsakes: { fa: 'صدا، نامه و دست‌نوشته‌های خودِ او.', en: 'His or her own audio, letters and handwriting.' },
+  memories: { fa: 'خاطره‌هایی که دیگران نوشته‌اند.', en: 'Memories written by others.' },
+  sources: { fa: 'منابع این روایت.', en: 'The sources of this story.' },
+} as const;
+const exploreKeys = (['biography', 'timeline', 'gallery', 'keepsakes', 'memories', 'sources'] as const).filter((k) => data.has[k]);
+const invite = features.memories && data.has.memories;
+
+// Short answers drawn only from recorded data: shown on the page and, for real people, as FAQ structured data.
+const place = (v: typeof m.birth.place) => (v ? `${lang === 'fa' ? '، ' : ', '}${loc(v, lang)}` : '');
+const qa: { q: string; a: string }[] = [
+  { q: t(lang, 'qaWho'), a: loc(m.summary, lang) },
+  { q: t(lang, 'qaBorn'), a: `${formatDate(m.birth.date, m.birth.precision, lang, calendar)}${place(m.birth.place)}` },
+  ...(m.death ? [{ q: t(lang, 'qaDied'), a: `${formatDate(m.death.date, m.death.precision, lang, calendar)}${place(m.death.place)}` }] : []),
+  ...(milestones.length >= 2 ? [{ q: t(lang, 'qaMilestones'), a: milestones.map((e) => loc(e.data.title, lang)).join(lang === 'fa' ? '؛ ' : '; ') }] : []),
+];
+const ld = {
+  lang,
+  breadcrumb: [{ name: lang === 'fa' ? 'یادبود دیجیتال' : 'Digital Memorial', path: homePath }, { name: loc(m.name, lang), path: memorialPath }],
+  ...(m.sample
+    ? {}
+    : {
+        faq: qa,
+        person: {
+          name: loc(m.name, lang),
+          birthDate: m.birth.date,
+          deathDate: m.death?.date,
+          birthPlace: m.birth.place ? loc(m.birth.place, lang) : undefined,
+          deathPlace: m.death?.place ? loc(m.death.place, lang) : undefined,
+          description: loc(m.summary, lang),
+          path: memorialPath,
+        },
+      }),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={loc(m.summary, lang)}
+  lang={lang}
+  path={pagePath}
+  canonicalPath={memorialPath}
+  slug={slug}
+  switchHref={switchHref}
+  current="home"
+  ogImage={heroImage}
+  alternates={{ fa: slug, en: `en/${slug}` }}
+  sample={m.sample}
+  ld={ld}
+>
+  <div class="progress" aria-hidden="true"><div class="bar"></div></div>
+
+  <StoryHero data={data} lang={lang} />
+
+  <section class="opening wrap--text reveal" id="opening" aria-labelledby="opening-title">
+    <h2 id="opening-title" class="eyebrow">{t(lang, 'openingTitle')}</h2>
+    <p class="lead">{loc(m.summary, lang)}</p>
+    {
+      chapters.length > 0 && (
+        <nav aria-label={t(lang, 'chapters')} class="chapter-index">
+          <ol>
+            {chapters.map((c) => (
+              <li>
+                <a href={`#ch-${c.id.split('/').pop()}`}>{c.data.title}</a>
+                {c.data.dateLabel && <span class="d">{c.data.dateLabel}</span>}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+  </section>
+
+  {chapters.map((c, i) => <StorySection chapter={c} data={data} lang={lang} era={chapters.length > 1 ? i / (chapters.length - 1) : 0} />)}
+
+  {
+    milestones.length > 0 && (
+      <>
+        <Journey slug={slug} events={milestones} lang={lang} calendar={calendar} storyPath={href(memorialPath)} />
+        {data.has.timeline && (
+          <div class="wrap--text more">
+            <a class="btn" href={href(`${slug}/timeline`)} hreflang="fa">{t(lang, 'fullTimeline')}</a>
+          </div>
+        )}
+      </>
+    )
+  }
+
+  {
+    photos.length > 0 && (
+      <section class="block reveal" id="photos" aria-labelledby="photos-title">
+        <div class="wrap">
+          <h2 id="photos-title">{t(lang, 'photos')}</h2>
+          <Collage items={photos} lang={lang} to={href(`${slug}/gallery`)} />
+          <p><a class="btn" href={href(`${slug}/gallery`)} hreflang="fa">{t(lang, 'gallery')}</a></p>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    videos.length > 0 && (
+      <section class="block reveal" id="videos" aria-labelledby="videos-title">
+        <div class="wrap">
+          <h2 id="videos-title">{t(lang, 'videos')}</h2>
+          <div class="videos">{videos.map((v) => <VideoEmbed video={v} lang={lang} />)}</div>
+        </div>
+      </section>
+    )
+  }
+
+  {
+    memories.length > 0 && (
+      <section class="block reveal" id="memories" aria-labelledby="memories-title">
+        <div class="wrap--text">
+          <h2 id="memories-title">{t(lang, 'memories')}</h2>
+          <p class="lede">{t(lang, 'memoriesLead')}</p>
+          {memories.map((x) => (
+            <MemoryCard
+              memory={x}
+              slug={slug}
+              calendar={calendar}
+              compact
+              portrait={x.data.portraitId ? data.galleryById.get(x.data.portraitId) : undefined}
+              images={x.data.imageIds.map((id) => data.galleryById.get(id)).filter((g): g is NonNullable<typeof g> => Boolean(g))}
+              video={x.data.videoId ? data.videoById.get(x.data.videoId) : undefined}
+            />
+          ))}
+          <p><a class="btn" href={href(`${slug}/memories`)}>{t(lang, 'memories')}</a></p>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="block glance reveal" id="glance" aria-labelledby="glance-title">
+    <div class="wrap--text">
+      <h2 id="glance-title">{t(lang, 'qaTitle')}</h2>
+      <dl>
+        {qa.map((x) => (<><dt>{x.q}</dt><dd>{x.a}</dd></>))}
+      </dl>
+    </div>
+  </section>
+
+  {
+    exploreKeys.length > 0 && (
+      <section class="block explore" aria-labelledby="explore-title">
+        <div class="wrap--text">
+          <h2 id="explore-title">{t(lang, 'explore')}</h2>
+          <ul class="cards">
+            {exploreKeys.map((k, i) => (
+              <li class="reveal" style={`--i:${i % 3}`}>
+                <a href={href(`${slug}/${k}`)} hreflang="fa">
+                  <span class="art"><Icon name={k} size={44} draw /></span>
+                  <strong>{t(lang, k)}</strong>
+                  <span class="d">{exploreText[k][lang]}</span>
+                  <span class="go" aria-hidden="true"><Icon name="arrow" size={20} /></span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          {lang === 'en' && <p class="note">{t('en', 'persianOnly')}.</p>}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    invite && (
+      <section class="block invite" id="invite" aria-labelledby="invite-title">
+        <div class="wrap--text">
+          <h2 id="invite-title">{t(lang, 'inviteTitle')}</h2>
+          <p>{t(lang, 'inviteText')}</p>
+          <p class="actions">
+            <a class="btn btn--solid" href={href('submit-memory')} hreflang="fa">{t(lang, 'inviteButton')}</a>
+            {activeChannels.map((c) => <a class="btn" href={c.url} rel="noopener noreferrer">{c.label}</a>)}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  {features.studio && <OrderCTA lang={lang} />}
+</BaseLayout>
+
+<script>
+  // Progressive enhancement only: reading-progress bar.
+  const bar = document.querySelector<HTMLElement>('.progress .bar');
+  if (bar) {
+    const update = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.inlineSize = h > 0 ? `${Math.min(100, (window.scrollY / h) * 100)}%` : '0';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  .progress { position: fixed; inset-block-start: 0; inset-inline: 0; block-size: 3px; z-index: 60; }
+  .bar { block-size: 100%; inline-size: 0; background: var(--accent); }
+  .opening { padding-block: var(--s-5); }
+  .lead { font-size: var(--fs-2); line-height: 1.9; font-weight: 500; }
+  .chapter-index ol { list-style: none; margin: var(--s-4) 0 0; padding: 0; border-block-start: var(--border); }
+  .chapter-index li { display: flex; justify-content: space-between; gap: var(--s-2); padding-block: 0.6rem; border-block-end: var(--border); }
+  .chapter-index a { text-decoration: none; }
+  .chapter-index a:hover { text-decoration: underline; }
+  .d { color: var(--ink-faint); font-size: 0.9rem; white-space: nowrap; }
+  .block { padding-block: var(--s-5); border-block-start: var(--border); }
+  .lede { color: var(--ink-soft); }
+  .videos { display: grid; gap: var(--s-3); grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+  .glance dt { font-weight: 800; margin-block-start: var(--s-2); }
+  .glance dd { margin: 0.2rem 0 0; color: var(--ink-soft); }
+  .more { padding-block: var(--s-3) var(--s-5); }
+  .cards { list-style: none; margin: var(--s-3) 0 0; padding: 0; display: grid; gap: var(--s-2); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+  .cards a {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: 0.3rem;
+    min-block-size: 7.5rem; padding: var(--s-3); text-decoration: none;
+    border: var(--border); border-radius: var(--radius); background: var(--paper-2);
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+  .cards strong { font-size: var(--fs-1); }
+  .cards .d { color: var(--ink-soft); font-size: 0.95rem; }
+  .cards a { position: relative; }
+  .art { display: grid; place-items: center; inline-size: 4.2rem; block-size: 4.2rem; border-radius: 50%; background: var(--paper); color: var(--accent); margin-block-end: 0.4rem; }
+  /* The arrow always shows which way the card leads and nudges on hover/focus. */
+  .go { position: absolute; inset-block-start: var(--s-3); inset-inline-end: var(--s-3); color: var(--ink-faint); transition: transform 0.25s ease, color 0.25s ease; }
+  :global([dir='rtl']) .go :global(svg) { transform: scaleX(-1); }
+  .cards a:hover .go, .cards a:focus-visible .go { color: var(--accent); transform: translateX(-4px); }
+  :global([dir='ltr']) .cards a:hover .go { transform: translateX(4px); }
+  /* Hover-capable devices: the description unfolds on hover/focus. Touch devices always show it. */
+  @media (hover: hover) {
+    .cards .d { max-block-size: 0; opacity: 0; overflow: hidden; transition: max-block-size 0.3s ease, opacity 0.3s ease; }
+    .cards a:hover .d, .cards a:focus-visible .d { max-block-size: 6rem; opacity: 1; }
+  }
+  .cards a:hover, .cards a:focus-visible { transform: translateY(-3px); border-color: var(--accent); background: var(--paper); }
+  @media (prefers-reduced-motion: reduce) { .cards a, .cards .d, .go { transition: none; } .cards a:hover { transform: none; } }
+  .note { color: var(--ink-faint); font-size: 0.9rem; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-1); }
+</style>

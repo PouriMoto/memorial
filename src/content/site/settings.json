@@ -1,0 +1,93 @@
+{
+  "title": {
+    "fa": "یادبود دیجیتال",
+    "en": "Digital Memorial"
+  },
+  "description": {
+    "fa": "آرشیو روایی زندگی افراد: داستان بلند، تصویرهای تاریخی، زندگی‌نامه، خط زمانی، ویدیوها و خاطره‌های دیگران.",
+    "en": "A narrative archive of a life: long-form story, historical photographs, biography, timeline, videos and memories from others."
+  },
+  "productionUrl": "",
+  "defaultCalendar": "gregory",
+  "features": {
+    "biography": true,
+    "timeline": true,
+    "gallery": true,
+    "videos": true,
+    "memories": true,
+    "keepsakes": true,
+    "sources": true,
+    "grave": true,
+    "qr": true,
+    "studio": true
+  },
+  "analytics": {
+    "enabled": false,
+    "scriptUrl": "",
+    "websiteId": "",
+    "domain": "",
+    "pixelUrl": ""
+  },
+  "googleFormsUrl": "",
+  "memoryChannels": [
+    {
+      "type": "telegram",
+      "label": "تلگرام",
+      "url": "",
+      "note": "مثلاً https://t.me/USERNAME"
+    },
+    {
+      "type": "bale",
+      "label": "بله",
+      "url": "",
+      "note": "نشانی کامل صفحه یا گفت‌وگو"
+    },
+    {
+      "type": "rubika",
+      "label": "روبیکا (صفحهٔ روبینو)",
+      "url": "",
+      "note": "نشانی صفحهٔ روبینو"
+    },
+    {
+      "type": "whatsapp",
+      "label": "واتس‌اپ",
+      "url": "",
+      "note": "مثلاً https://wa.me/شماره‌به‌صورت‌بین‌المللی"
+    }
+  ],
+  "orderCta": {
+    "heading": {
+      "fa": "می‌خواهید خاطرات و روایت زندگی عزیزانتان را ماندگار کنید؟",
+      "en": "Want to preserve the memories and life story of someone you love?"
+    },
+    "text": {
+      "fa": "می‌توانید یک وب‌سایت یادبود اختصاصی سفارش دهید؛ با زندگی‌نامه، تصویرها، ویدیوها، خط زمانی، خاطرهٔ خانواده و دوستان و اسناد تاریخی.",
+      "en": "You can commission a custom memorial website, with a biography, photographs, videos, a timeline, memories from family and friends, and historical documents."
+    },
+    "primaryContactUrl": "",
+    "primaryContactLabel": {
+      "fa": "تماس با سازنده",
+      "en": "Contact the creator"
+    }
+  },
+  "contactLinks": [
+    {
+      "label": "تلگرام",
+      "url": "",
+      "note": "آدرس را اینجا بگذارید، مثلاً https://t.me/USERNAME"
+    },
+    {
+      "label": "ایمیل",
+      "url": "",
+      "note": "مثلاً mailto:name@example.com"
+    }
+  ],
+  "socialProfiles": [
+    {
+      "label": "صفحهٔ سازنده",
+      "url": "",
+      "note": "نشانی کامل صفحه را اینجا بگذارید"
+    }
+  ],
+  "externalMedia": []
+}

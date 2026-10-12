@@ -1,0 +1,169 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import VideoEmbed from './VideoEmbed.astro';
+import { formatDate, type Calendar } from '../lib/format';
+import { asset, href } from '../lib/url';
+import { loc } from '../lib/i18n';
+
+interface Props {
+  memory: CollectionEntry<'memories'>;
+  slug: string;
+  portrait?: CollectionEntry<'gallery'>;
+  images?: CollectionEntry<'gallery'>[];
+  video?: CollectionEntry<'videos'>;
+  calendar?: Calendar;
+  /** On the memory's own page the whole text is shown, not a preview. */
+  full?: boolean;
+  /** Hide the permalink + share row (used on the home strip). */
+  compact?: boolean;
+  /** Heading level of the title: 2 on pages where the card sits directly under the h1. */
+  level?: 2 | 3;
+}
+const { memory, slug, portrait, images = [], video, calendar = 'gregory', full = false, compact = false, level = full ? 2 : 3 } = Astro.props;
+const Heading = level === 2 ? 'h2' : 'h3';
+const d = memory.data;
+const permalink = href(`${slug}/memories/${d.id}`);
+
+// Long memories show a preview with a native "continue" disclosure (works without JavaScript).
+const PREVIEW = 260;
+let preview = d.text;
+let rest = '';
+if (!full && d.text.length > PREVIEW + 60) {
+  const cut = d.text.lastIndexOf(' ', PREVIEW);
+  const at = cut > 120 ? cut : PREVIEW;
+  preview = d.text.slice(0, at).trimEnd() + '…';
+  rest = d.text.slice(at).trimStart();
+}
+const paragraphs = (s: string) => s.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+const initial = [...d.displayName.trim()][0] ?? '؟';
+const search = [d.displayName, d.relationship, d.title, d.topics.join(' '), d.text].filter(Boolean).join(' ');
+---
+
+<article class="memory" id={`m-${d.id}`} data-memory data-search={search} data-topics={d.topics.join('|')}>
+  <header>
+    {
+      portrait ? (
+        <img class="avatar" src={asset(portrait.data.src)} alt={loc(portrait.data.alt, 'fa')} loading="lazy" decoding="async" width="48" height="48" />
+      ) : (
+        <span class="avatar initial" aria-hidden="true">{initial}</span>
+      )
+    }
+    <div class="who">
+      <p class="name">{d.displayName}</p>
+      <p class="meta">
+        {d.relationship}
+        {d.relationship && d.date && ' · '}
+        {d.date && <time datetime={d.date}>{formatDate(d.date, 'exact', 'fa', calendar)}</time>}
+      </p>
+    </div>
+  </header>
+
+  {d.title && <Heading>{full ? d.title : <a href={permalink}>{d.title}</a>}</Heading>}
+
+  <div class="text">
+    {paragraphs(preview).map((p) => <p>{p}</p>)}
+    {
+      rest && (
+        <details>
+          <summary>ادامهٔ خاطره</summary>
+          {paragraphs(rest).map((p) => <p>{p}</p>)}
+        </details>
+      )
+    }
+  </div>
+
+  {
+    images.length > 0 && (
+      <ul class:list={['photos', `n${Math.min(images.length, 3)}`]}>
+        {images.map((g) => (
+          <li>
+            <img src={asset(g.data.src)} alt={loc(g.data.alt, 'fa')} loading="lazy" decoding="async" width={g.data.width} height={g.data.height} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {video && <div class="video"><VideoEmbed video={video} /></div>}
+
+  {
+    d.topics.length > 0 && (
+      <ul class="topics" aria-label="موضوع‌ها">
+        {d.topics.map((tp) => <li class="chip">{tp}</li>)}
+      </ul>
+    )
+  }
+
+  {
+    !compact && (
+      <footer>
+        <button type="button" class="share btn js-only" data-share data-path={permalink} data-title={d.title ?? `خاطره‌ای از ${d.displayName}`}>
+          اشتراک‌گذاری
+        </button>
+        {!full && <a class="link-arrow" href={permalink}>صفحهٔ این خاطره</a>}
+        <span class="copied visually-hidden" role="status" aria-live="polite"></span>
+      </footer>
+    )
+  }
+</article>
+
+<script>
+  // Share: native share sheet when available, otherwise copy the link.
+  document.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-share]');
+    if (!btn) return;
+    const url = new URL(btn.dataset.path ?? '', location.href).href;
+    const title = btn.dataset.title ?? document.title;
+    const status = btn.parentElement?.querySelector<HTMLElement>('.copied');
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+    } catch (err) {
+      if ((err as DOMException).name === 'AbortError') return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      if (status) status.textContent = 'پیوند کپی شد';
+      const old = btn.textContent;
+      btn.textContent = 'پیوند کپی شد';
+      setTimeout(() => { btn.textContent = old; if (status) status.textContent = ''; }, 2000);
+    } catch {
+      window.prompt('پیوند را کپی کنید:', url);
+    }
+  });
+</script>
+
+<style>
+  .memory {
+    border: var(--border);
+    border-radius: var(--radius);
+    padding: var(--s-3);
+    margin-block-end: var(--s-3);
+    background: color-mix(in srgb, var(--paper-2) 45%, var(--paper));
+  }
+  header { display: flex; gap: var(--s-2); align-items: center; margin-block-end: var(--s-1); }
+  .avatar { inline-size: 48px; block-size: 48px; border-radius: 50%; object-fit: cover; flex: none; }
+  .initial { display: grid; place-items: center; background: var(--accent); color: var(--paper); font-weight: 800; font-size: 1.2rem; }
+  .name { margin: 0; font-weight: 800; line-height: 1.6; }
+  .meta { margin: 0; color: var(--ink-faint); font-size: 0.88rem; line-height: 1.6; }
+  :is(h2, h3) { margin-block: var(--s-1) 0.4rem; font-size: 1.15rem; }
+  :is(h2, h3) a { text-decoration: none; }
+  :is(h2, h3) a:hover { text-decoration: underline; }
+  .text { font-size: var(--fs-1); line-height: 2; }
+  .text p:last-child { margin-block-end: 0; }
+  details { margin-block-start: 0.4rem; }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 700; font-size: 0.95rem; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details[open] summary { display: none; }
+  .photos { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: grid; gap: 0.5rem; }
+  .photos.n2 { grid-template-columns: 1fr 1fr; }
+  .photos.n3 { grid-template-columns: repeat(3, 1fr); }
+  .photos img { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 0.6rem; }
+  .video { margin-block-start: var(--s-2); }
+  .topics { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  footer { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-2); margin-block-start: var(--s-2); padding-block-start: var(--s-1); border-block-start: var(--border); }
+  .share { padding: 0.25rem 1rem; min-block-size: 40px; font-size: 0.88rem; }
+  footer .link-arrow { font-size: 0.9rem; }
+</style>

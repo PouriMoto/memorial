@@ -1,0 +1,9 @@
+---
+import StoryPage from '../components/StoryPage.astro';
+import { getFeaturedMemorial } from '../lib/memorial';
+
+const memorial = await getFeaturedMemorial();
+if (!memorial) throw new Error('No memorial found in src/content/memorials');
+---
+
+<StoryPage slug={memorial.id} lang="fa" isHome />

@@ -1,0 +1,56 @@
+---
+// Creator / project introduction. Only built when features.studio is on.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { author, activeContacts, activeSocial } from '../lib/site';
+import { loc } from '../lib/i18n';
+import { href } from '../lib/url';
+import { getFeaturedMemorial } from '../lib/memorial';
+
+const featured = await getFeaturedMemorial();
+---
+
+<BaseLayout
+  title="دربارهٔ پروژه | یادبود دیجیتال"
+  description="یادبود دیجیتال: وب‌سایتی برای روایت زندگی افراد، با داستان، تصویر، خاطره و یادگار."
+  path="about"
+  slug={featured?.id}
+  current="about"
+>
+  <div class="wrap--text head">
+    <p class="eyebrow">دربارهٔ پروژه</p>
+    <h1>جایی برای روایت یک زندگی</h1>
+  </div>
+  <div class="wrap--text prose">
+    <p>
+      «یادبود دیجیتال» یک وب‌سایت برای ماندگار کردن زندگی یک آدم است: روایت بلند، عکس‌ها، زندگی‌نامه، خط زمانی، ویدیو،
+      خاطره‌هایی که نزدیکان می‌نویسند و یادگارهایی مثل صدا و نامه. می‌شود آن را با یک کد QR یا برچسب NFC کنار مزار یا روی
+      کارت دعوت گذاشت تا هر کس که می‌خواهد، داستان را بخواند.
+    </p>
+
+    <h2>اصول</h2>
+    <ul>
+      <li>خاطره‌ها فقط پس از بررسی و با اجازهٔ نویسنده منتشر می‌شوند.</li>
+      <li>هر بخش خالی نشان داده نمی‌شود؛ هر چه نباشد، صفحه‌اش هم نیست.</li>
+      <li>لحن محترمانه و ساده است؛ هیچ ادعای ساختگی در متن‌ها نمی‌آید.</li>
+    </ul>
+
+    <h2>سازنده</h2>
+    <p>{loc(author.introduction, 'fa')}</p>
+    <p class="by">{loc(author.displayName, 'fa')}{author.handle && <> · <bdi>{author.handle}</bdi></>}</p>
+    {
+      (activeContacts.length > 0 || activeSocial.length > 0) && (
+        <ul>
+          {[...activeContacts, ...activeSocial].map((l) => (
+            <li><a href={l.url} rel="noopener noreferrer">{l.label}</a></li>
+          ))}
+        </ul>
+      )
+    }
+    <p><a class="btn btn--solid" href={href('order')}>سفارش یادبود اختصاصی</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .head { padding-block: var(--s-5) var(--s-2); }
+  .by { color: var(--ink-faint); font-size: 0.95rem; }
+</style>

@@ -1,0 +1,28 @@
+---
+import { loc, t, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+import { settings, primaryContactUrl } from '../lib/site';
+
+interface Props {
+  lang?: Lang;
+}
+const { lang = 'fa' } = Astro.props;
+const contactLabel = loc(settings.orderCta.primaryContactLabel, lang) || t(lang, 'ctaContact');
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <div class="wrap--text">
+    <h2 id="cta-title">{loc(settings.orderCta.heading, lang)}</h2>
+    <p>{loc(settings.orderCta.text, lang)}</p>
+    <p class="actions">
+      <a class="btn btn--solid" href={href('order')} hreflang="fa">{t(lang, 'ctaOrder')}</a>
+      {primaryContactUrl && <a class="btn" href={primaryContactUrl} rel="noopener noreferrer">{contactLabel}</a>}
+    </p>
+  </div>
+</section>
+
+<style>
+  .cta { padding-block: var(--s-5); border-block: var(--border); margin-block-start: var(--s-5); background: var(--paper-2); }
+  h2 { font-size: var(--fs-2); }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-1); margin-block-start: var(--s-3); }
+</style>

@@ -1,0 +1,112 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { loc, hasEn, t, type Lang } from '../lib/i18n';
+import { formatDate, isExact, type Calendar } from '../lib/format';
+import { href, asset } from '../lib/url';
+
+interface Props {
+  slug: string;
+  events: CollectionEntry<'timeline'>[];
+  galleryById: Map<string, CollectionEntry<'gallery'>>;
+  lang?: Lang;
+  calendar?: Calendar;
+  /** compact = home milestones strip (no images). */
+  compact?: boolean;
+  /** Path of the page that holds the story chapters (for "related story" links). */
+  storyPath?: string;
+  /** Heading level of event titles (2 when the list sits directly under the page's h1). */
+  level?: 2 | 3;
+}
+const { slug, events, galleryById, lang = 'fa', calendar = 'gregory', compact = false, storyPath, level = 3 } = Astro.props;
+const Heading = level === 2 ? 'h2' : 'h3';
+const shown = lang === 'en' ? events.filter((e) => hasEn(e.data.title) && hasEn(e.data.description)) : events;
+const storyBase = storyPath ?? (lang === 'en' ? href(`en/${slug}`) : href(slug));
+---
+
+<ol class:list={['timeline', { compact }]}>
+  {
+    shown.map((e, i) => {
+      const d = e.data;
+      const exact = isExact(d.precision);
+      const image = d.imageId ? galleryById.get(d.imageId) : undefined;
+      return (
+        <li id={`event-${d.id}`} class:list={['reveal', exact ? 'exact' : 'approx']} style={`--i:${Math.min(i, 3)}`}>
+          <span class="marker" aria-hidden="true" />
+          <div class="body">
+            <p class="when">
+              <time datetime={d.date}>{formatDate(d.date, d.precision, lang, calendar)}</time>
+              <span class="visually-hidden">
+                {' '}
+                — {exact ? t(lang, 'exact') : d.precision === 'uncertain' ? t(lang, 'uncertain') : t(lang, 'approximate')}
+              </span>
+            </p>
+            <Heading>{loc(d.title, lang)}</Heading>
+            <p>{loc(d.description, lang)}</p>
+            {
+              !compact && image && (
+                <figure>
+                  <img
+                    src={asset(image.data.src)}
+                    alt={loc(image.data.alt, lang)}
+                    loading="lazy"
+                    decoding="async"
+                    width={image.data.width}
+                    height={image.data.height}
+                  />
+                  <figcaption>{loc(image.data.caption, lang)}</figcaption>
+                </figure>
+              )
+            }
+            {
+              d.storyId && (
+                <p class="story-link">
+                  <a class="link-arrow" href={`${storyBase}#ch-${d.storyId}`}>{t(lang, 'relatedStory')}</a>
+                </p>
+              )
+            }
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    border-inline-start: 2px solid var(--rule);
+    margin-inline-start: 0.6rem;
+  }
+  li {
+    position: relative;
+    padding-inline-start: var(--s-3);
+    padding-block-end: var(--s-4);
+  }
+  .marker {
+    position: absolute;
+    inset-inline-start: -0.62rem;
+    inset-block-start: 0.55rem;
+    inline-size: 1.05rem;
+    block-size: 1.05rem;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--paper);
+  }
+  .exact .marker { background: var(--accent); }
+  .approx .marker { border-style: dashed; background: var(--paper); }
+  .when { margin: 0; color: var(--accent); font-weight: 700; font-size: 0.95rem; }
+  :is(h2, h3) { margin-block: 0.15rem 0.35rem; }
+  .body p { margin-block-end: 0.5rem; }
+  figure { margin: var(--s-2) 0 0; }
+  figure img { display: block; border-radius: var(--radius); }
+  figcaption { font-size: 0.88rem; color: var(--ink-faint); }
+  .story-link { font-size: 0.92rem; }
+  .js li.reveal .marker { transform: scale(0.3); transition: transform 0.5s ease 0.2s; }
+  .js li.reveal.in .marker { transform: none; }
+  @media (prefers-reduced-motion: reduce) { .js li.reveal .marker { transform: none; transition: none; } }
+  .compact li { padding-block-end: var(--s-3); }
+  .compact :is(h2, h3) { font-size: 1.1rem; }
+</style>

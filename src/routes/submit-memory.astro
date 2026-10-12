@@ -1,0 +1,88 @@
+---
+// Memory submission page. Only built when features.memories is on.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formsUrl, activeChannels } from '../lib/site';
+import { getFeaturedMemorial } from '../lib/memorial';
+
+const featured = await getFeaturedMemorial();
+
+// Embed only genuine Google Forms URLs; anything else is shown as a plain link.
+let embed = '';
+if (formsUrl) {
+  try {
+    const u = new URL(formsUrl);
+    if (u.hostname === 'docs.google.com' && u.pathname.startsWith('/forms/')) {
+      u.searchParams.set('embedded', 'true');
+      embed = u.href;
+    }
+  } catch {
+    /* invalid URL: fall back to the plain link / channels */
+  }
+}
+const hasAny = Boolean(formsUrl) || activeChannels.length > 0;
+---
+
+<BaseLayout
+  title="ثبت خاطره | یادبود دیجیتال"
+  description="خاطرهٔ خود را برای انتشار در یادبود بفرستید؛ هر خاطره پیش از انتشار بررسی می‌شود و فقط با اجازهٔ نویسنده منتشر می‌شود."
+  path="submit-memory"
+  slug={featured?.id}
+  current="submit"
+>
+  <div class="wrap--text head">
+    <p class="eyebrow">ثبت خاطره</p>
+    <h1>خاطرهٔ خود را بفرستید</h1>
+  </div>
+  <div class="wrap--text prose">
+    <p>خاطره‌های شما بخشی از روایت این یادبود می‌شوند. هر خاطره این مراحل را می‌گذراند:</p>
+    <ol>
+      <li>شما خاطره و نامی را که دوست دارید نمایش داده شود می‌فرستید.</li>
+      <li>خاطره بررسی می‌شود.</li>
+      <li>با اجازهٔ صریح شما منتشر می‌شود؛ بدون اجازه، هیچ خاطره‌ای منتشر نمی‌شود.</li>
+    </ol>
+    <p>اطلاعات تماس شما در سایت نمایش داده نمی‌شود.</p>
+
+    {
+      embed && (
+        <div class="form-frame">
+          <iframe src={embed} title="فرم ثبت خاطره" loading="lazy">در حال بارگذاری…</iframe>
+        </div>
+        <p class="note">
+          اگر فرم باز نشد، <a href={formsUrl} rel="noopener noreferrer">آن را در صفحهٔ جدا باز کنید</a>. فرم‌هایی که پرسش آپلود فایل دارند
+          معمولاً از شما می‌خواهند وارد حساب گوگل شوید.
+        </p>
+      )
+    }
+    {!embed && formsUrl && <p><a class="btn btn--solid" href={formsUrl} rel="noopener noreferrer">باز کردن فرم ثبت خاطره</a></p>}
+
+    {
+      activeChannels.length > 0 && (
+        <section aria-labelledby="channels-title">
+          <h2 id="channels-title">{formsUrl ? 'یا از این راه‌ها بفرستید' : 'خاطره را از این راه‌ها بفرستید'}</h2>
+          <ul class="channels">
+            {activeChannels.map((c) => (
+              <li><a class="btn" href={c.url} rel="noopener noreferrer">{c.label}</a></li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      !hasAny && (
+        <div class="empty">
+          <p><strong>راه ارسال خاطره هنوز تنظیم نشده است.</strong></p>
+          <p>در <code>src/content/site/settings.json</code>، نشانی فرم گوگل را در <code>googleFormsUrl</code> و راه‌های پیام (تلگرام، بله، روبیکا، واتس‌اپ) را در <code>memoryChannels</code> بگذارید.</p>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .head { padding-block: var(--s-5) var(--s-2); }
+  .form-frame { margin-block: var(--s-3); border: var(--border); border-radius: var(--radius); overflow: hidden; }
+  .form-frame iframe { display: block; inline-size: 100%; block-size: 40rem; border: 0; }
+  .note { font-size: 0.92rem; color: var(--ink-faint); }
+  .channels { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--s-1); }
+</style>

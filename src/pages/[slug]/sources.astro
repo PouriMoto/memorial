@@ -1,0 +1,76 @@
+---
+import MemorialLayout from '../../layouts/MemorialLayout.astro';
+import { loadMemorial, memorialPathsWith } from '../../lib/memorial';
+import { formatDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('sources');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+
+const typeLabel = {
+  primary: 'منبع اولیه',
+  secondary: 'منبع ثانویهٔ معتبر',
+  'personal-recollection': 'روایت شخصی',
+  unverified: 'بررسی‌نشده',
+} as const;
+const statusLabel = {
+  verified: 'بررسی و مقایسه شده',
+  'partially-verified': 'متن خوانده شده، نیمه‌بررسی‌شده',
+  'link-only': 'فقط پیوند ثبت شده؛ متن بررسی نشده',
+  unverified: 'بررسی‌نشده',
+} as const;
+const order = ['primary', 'secondary', 'personal-recollection', 'unverified'] as const;
+const groups = order
+  .map((type) => ({ type, items: data.sources.filter((s) => s.data.type === type) }))
+  .filter((g) => g.items.length > 0);
+---
+
+<MemorialLayout
+  data={data}
+  section="sources"
+  title="منابع"
+  description="منابع پژوهش این یادبود، با نوع منبع (اولیه، ثانویه، روایت شخصی، بررسی‌نشده) و وضعیت بررسی هرکدام."
+  lead="منابع اولیه، منابع ثانویهٔ معتبر، روایت‌های شخصی و مطالب بررسی‌نشده از هم جدا شده‌اند."
+>
+  {
+    groups.map((g) => (
+      <section aria-labelledby={`g-${g.type}`}>
+        <h2 id={`g-${g.type}`}>{typeLabel[g.type]}</h2>
+        {g.items.map((s) => (
+          <article id={s.data.id} class="src">
+            <h3><bdi>{s.data.title}</bdi></h3>
+            <p class="meta">
+              <bdi>{s.data.publisher}</bdi>
+              {s.data.publishedAt && <> · انتشار: <time datetime={s.data.publishedAt}>{formatDate(s.data.publishedAt)}</time></>}
+              {s.data.accessedAt && <> · دسترسی: <time datetime={s.data.accessedAt}>{formatDate(s.data.accessedAt)}</time></>}
+            </p>
+            <p><a class="url" href={s.data.url} rel="noopener noreferrer">{s.data.url}</a></p>
+            <p>{s.data.relevance}</p>
+            <p class="status">
+              <strong>وضعیت:</strong> {statusLabel[s.data.status]}
+            </p>
+            {s.data.note && <p class="note">{s.data.note}</p>}
+          </article>
+        ))}
+      </section>
+    ))
+  }
+  <section class="editorial">
+    <h2>یادداشت سردبیری</h2>
+    <p>
+      این وب‌سایت روایتی یادبودی است. ادعاهای مناقشه‌برانگیز بدون ذکر منبع بیان نمی‌شوند و نظر حامیان و منتقدان در منابع بیرونی
+      دنبال می‌شود. هر منبعی که «فقط پیوند ثبت شده» است هنوز پشتوانهٔ هیچ ادعایی در متن نیست، مگر آنکه جداگانه در
+      فهرست منابع همان فصل آمده باشد.
+    </p>
+  </section>
+</MemorialLayout>
+
+<style>
+  .src { border-block-start: var(--border); padding-block: var(--s-2); }
+  .src h3 { margin-block-end: 0.1rem; }
+  .meta, .note { color: var(--ink-faint); font-size: 0.92rem; }
+  .status { font-size: 0.95rem; }
+  .editorial { margin-block-start: var(--s-5); padding-block-start: var(--s-2); border-block-start: var(--border); }
+</style>

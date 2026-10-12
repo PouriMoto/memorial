@@ -1,0 +1,768 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>راهنمای تصاویر: پروین آریان‌فر</title>
+<style>
+:root{--bg:#f6f2ea;--ink:#1d1a16;--soft:#5d564b;--line:#d6ccb9;--ok:#2e7d4f;--no:#b3261e;--acc:#8a5a1c;font-family:Vazirmatn,Tahoma,system-ui,sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#151210;--ink:#f1ece2;--soft:#b7ad9c;--line:#3a342c;--ok:#6fcf97;--no:#ff8a80;--acc:#e0b36a}}
+body{margin:0;background:var(--bg);color:var(--ink);line-height:1.8}
+main{max-width:70rem;margin:0 auto;padding:1.5rem 1rem 4rem}
+h1{margin:.2rem 0}h2{margin-top:2.5rem;border-bottom:1px solid var(--line);padding-bottom:.4rem}
+.lead,.dim{color:var(--soft)}
+.rules{border:1px solid var(--line);border-radius:1rem;padding:1rem 1.25rem}
+.grid{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fill,minmax(19rem,1fr))}
+.slot{border:1px solid var(--line);border-radius:1rem;overflow:hidden;display:flex;flex-direction:column}
+.slot.ok{border-color:var(--ok)}
+.frame{background:repeating-linear-gradient(45deg,transparent 0 10px,color-mix(in srgb,var(--line) 50%,transparent) 10px 20px);display:grid;place-items:center;border-bottom:1px dashed var(--soft);max-height:16rem;inline-size:100%}
+.frame span{background:var(--bg);padding:.2rem .7rem;border-radius:999px;font-weight:700;direction:ltr}
+.meta{padding:1rem}.meta h3{margin:0}.meta small{font-weight:400;color:var(--soft);font-size:.8rem}.meta small.req{color:var(--acc);font-weight:700}
+.meta p{margin:.3rem 0}.meta ul{margin:.3rem 0;padding-inline-start:1.2rem;color:var(--soft);font-size:.92rem}
+code{font-size:.85rem;word-break:break-all}
+.state{font-weight:700}.ok .state{color:var(--ok)}.slot:not(.ok) .state{color:var(--no)}
+button{font:inherit;font-size:.85rem;padding:.35rem .9rem;border-radius:999px;border:1px solid var(--ink);background:none;color:var(--ink);cursor:pointer;min-height:2.4rem}
+button:hover{background:var(--ink);color:var(--bg)}
+</style></head><body><main>
+<h1>راهنمای تصاویر: پروین آریان‌فر</h1>
+<p class="lead">0 از 27 جایگاه پر است. هر کادرِ خط‌خطی اندازهٔ دقیق و نسبت تصویر است. این فایل را از روی داده‌ها <code>npm run slots</code> دوباره می‌سازد.</p>
+<section class="rules"><strong>قواعد کلی</strong><ul>
+<li>فایل‌ها را در <code dir="ltr">public/images/parvin/</code> بگذارید؛ نام لاتین، حروف کوچک، با خط‌تیره.</li>
+<li>قالب WebP با کیفیت حدود ۸۰؛ پرتره با پس‌زمینهٔ شفاف WebP یا PNG. سقف حجم هر تصویر در کارت‌ها آمده است (گورستان اینترنت ضعیف دارد).</li>
+<li>برای هر تصویر متن جایگزین (alt)، شرح، پدیدآورنده/منبع و مجوز در <code>gallery.json</code> لازم است. تصویر ساخته‌شده با هوش مصنوعی را با همین برچسب ثبت کنید و سند تاریخی جا نزنید.</li>
+<li>تصویر چهرهٔ افراد زنده (آواتار خاطره‌ها) فقط با اجازهٔ خودشان.</li></ul></section>
+<h2>اصلی</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:1200 / 1600"><span>1200 × 1600 px</span></div>
+  <div class="meta">
+    <h3>پرتره هیرو <small class="req">لازم</small></h3>
+    <p class="dim">1200 × 1600 px · WebP یا PNG با پس‌زمینهٔ شفاف · حداکثر 250 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/hero-portrait.webp</code> <button data-copy="public/images/parvin/hero-portrait.webp">کپی مسیر</button></p>
+    <p>سر و شانهٔ پروین آریان‌فر، رو به دوربین یا کمی مایل، نور نرم. سر حدود ۱۵٪ از بالای کادر فاصله داشته باشد و شانه‌ها تا پایین ادامه یابند چون پایین کادر محو می‌شود.</p>
+    <ul><li>صفحهٔ اول (هیرو)، پایین پرتره در پس‌زمینه محو می‌شود</li><li>صفحهٔ مزار (برش دایره‌ای؛ چهره را وسط و بالای کادر بگذارید)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;hero&quot;,
+  &quot;src&quot;: &quot;/images/parvin/hero-portrait.webp&quot;,
+  &quot;width&quot;: 1200,
+  &quot;height&quot;: 1600,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1200 / 630"><span>1200 × 630 px</span></div>
+  <div class="meta">
+    <h3>تصویر اشتراک‌گذاری <small class="req">لازم</small></h3>
+    <p class="dim">1200 × 630 px · JPG · حداکثر 150 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/og-image.webp</code> <button data-copy="public/images/parvin/og-image.webp">کپی مسیر</button></p>
+    <p>نام و چهره در بخش مرکزی؛ حاشیه‌های چپ و راست ممکن است بریده شود.</p>
+    <ul><li>پیش‌نمایش لینک در تلگرام، بله، واتس‌اپ و گوگل</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;og&quot;,
+  &quot;src&quot;: &quot;/images/parvin/og-image.webp&quot;,
+  &quot;width&quot;: 1200,
+  &quot;height&quot;: 630,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<h2>فصل‌های روایت</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 1: کوچهٔ نارنج <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-01.webp</code> <button data-copy="public/images/parvin/chapter-01.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-1&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-01.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 2: دفتر شعر آبی <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-02.webp</code> <button data-copy="public/images/parvin/chapter-02.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-2&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-02.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 3: کلاس شمارهٔ سه <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-03.webp</code> <button data-copy="public/images/parvin/chapter-03.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-3&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-03.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 4: خانهٔ پر از کتاب <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-04.webp</code> <button data-copy="public/images/parvin/chapter-04.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-4&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-04.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 5: چهل و دو سال <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-05.webp</code> <button data-copy="public/images/parvin/chapter-05.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-5&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-05.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 6: کتابخانهٔ محله <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-06.webp</code> <button data-copy="public/images/parvin/chapter-06.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-6&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-06.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1000"><span>1600 × 1000 px</span></div>
+  <div class="meta">
+    <h3>فصل 7: چای دوم <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1000 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/chapter-07.webp</code> <button data-copy="public/images/parvin/chapter-07.webp">کپی مسیر</button></p>
+    <p>تصویر مرتبط با همین فصل (اختیاری). برای کلاژ فصل می‌توانید چند تصویر بدهید: در فایل فصل، فیلد imageIds.</p>
+    <ul><li>در موبایل بالای فصل می‌چسبد (برش افقی)؛ موضوع را وسط کادر بگذارید</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;chapter-7&quot;,
+  &quot;src&quot;: &quot;/images/parvin/chapter-07.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1000,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<h2>کلاژ تصاویر</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 1600"><span>1600 × 1600 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۱ (بزرگ، مربع) <small>اختیاری</small></h3>
+    <p class="dim">1600 × 1600 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-1.webp</code> <button data-copy="public/images/parvin/collage-1.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-1&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-1.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 1600,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1200 / 800"><span>1200 × 800 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۲ (افقی) <small>اختیاری</small></h3>
+    <p class="dim">1200 × 800 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-2.webp</code> <button data-copy="public/images/parvin/collage-2.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-2&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-2.webp&quot;,
+  &quot;width&quot;: 1200,
+  &quot;height&quot;: 800,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1200 / 800"><span>1200 × 800 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۳ (افقی) <small>اختیاری</small></h3>
+    <p class="dim">1200 × 800 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-3.webp</code> <button data-copy="public/images/parvin/collage-3.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-3&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-3.webp&quot;,
+  &quot;width&quot;: 1200,
+  &quot;height&quot;: 800,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1000 / 1500"><span>1000 × 1500 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۴ (عمودی) <small>اختیاری</small></h3>
+    <p class="dim">1000 × 1500 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-4.webp</code> <button data-copy="public/images/parvin/collage-4.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-4&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-4.webp&quot;,
+  &quot;width&quot;: 1000,
+  &quot;height&quot;: 1500,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1800 / 600"><span>1800 × 600 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۵ (پهن) <small>اختیاری</small></h3>
+    <p class="dim">1800 × 600 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-5.webp</code> <button data-copy="public/images/parvin/collage-5.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-5&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-5.webp&quot;,
+  &quot;width&quot;: 1800,
+  &quot;height&quot;: 600,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1000 / 1500"><span>1000 × 1500 px</span></div>
+  <div class="meta">
+    <h3>کلاژ ۶ (عمودی) <small>اختیاری</small></h3>
+    <p class="dim">1000 × 1500 px · WebP · حداکثر 220 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/collage-6.webp</code> <button data-copy="public/images/parvin/collage-6.webp">کپی مسیر</button></p>
+    <p>هر عکس می‌تواند هر نسبتی داشته باشد؛ کادر آن را می‌برد. موضوع را وسط بگذارید. شش عکس بهترین چیدمان را می‌دهند.</p>
+    <ul><li>بخش «تصاویر» و گالری؛ با اسکرول ظاهر می‌شود</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;collage-6&quot;,
+  &quot;src&quot;: &quot;/images/parvin/collage-6.webp&quot;,
+  &quot;width&quot;: 1000,
+  &quot;height&quot;: 1500,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<h2>آواتار خاطره‌ها</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار سمیرا <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-samira.webp</code> <button data-copy="public/images/parvin/avatar-samira.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-samira&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-samira.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار آقای رحیمی <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-rahimi.webp</code> <button data-copy="public/images/parvin/avatar-rahimi.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-rahimi&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-rahimi.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار نگار <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-negar.webp</code> <button data-copy="public/images/parvin/avatar-negar.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-negar&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-negar.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار کامران <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-kamran.webp</code> <button data-copy="public/images/parvin/avatar-kamran.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-kamran&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-kamran.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار زهره <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-zohreh.webp</code> <button data-copy="public/images/parvin/avatar-zohreh.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-zohreh&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-zohreh.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار سینا <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-sina.webp</code> <button data-copy="public/images/parvin/avatar-sina.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-sina&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-sina.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار مهشید <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-mahshid.webp</code> <button data-copy="public/images/parvin/avatar-mahshid.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-mahshid&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-mahshid.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:256 / 256"><span>256 × 256 px</span></div>
+  <div class="meta">
+    <h3>آواتار آقای قاسمی <small>اختیاری</small></h3>
+    <p class="dim">256 × 256 px · WebP · حداکثر 30 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/avatar-ghasemi.webp</code> <button data-copy="public/images/parvin/avatar-ghasemi.webp">کپی مسیر</button></p>
+    <p>اختیاری. اگر نباشد، حرف اول نام نشان داده می‌شود. فقط با اجازهٔ خود فرد.</p>
+    <ul><li>کنار نام در فید خاطره‌ها (دایره)</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;avatar-ghasemi&quot;,
+  &quot;src&quot;: &quot;/images/parvin/avatar-ghasemi.webp&quot;,
+  &quot;width&quot;: 256,
+  &quot;height&quot;: 256,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<h2>یادگارها</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 2200"><span>1600 × 2200 px</span></div>
+  <div class="meta">
+    <h3>اسکن: نامه‌ای به یک شاگرد <small>اختیاری</small></h3>
+    <p class="dim">1600 × 2200 px · WebP · حداکثر 300 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/scan-letter-1.webp</code> <button data-copy="public/images/parvin/scan-letter-1.webp">کپی مسیر</button></p>
+    <p>اسکن یا عکس مستقیم از بالا، نور یکنواخت، بدون سایه. حدود ۱۶۰۰ پیکسل عرض.</p>
+    <ul><li>صفحهٔ یادگارها، کنار متن تایپ‌شده</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;scan-letter-1&quot;,
+  &quot;src&quot;: &quot;/images/parvin/scan-letter-1.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 2200,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 2200"><span>1600 × 2200 px</span></div>
+  <div class="meta">
+    <h3>اسکن: نامه‌ای به شاگردان آخرین سال <small>اختیاری</small></h3>
+    <p class="dim">1600 × 2200 px · WebP · حداکثر 300 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/scan-letter-2.webp</code> <button data-copy="public/images/parvin/scan-letter-2.webp">کپی مسیر</button></p>
+    <p>اسکن یا عکس مستقیم از بالا، نور یکنواخت، بدون سایه. حدود ۱۶۰۰ پیکسل عرض.</p>
+    <ul><li>صفحهٔ یادگارها، کنار متن تایپ‌شده</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;scan-letter-2&quot;,
+  &quot;src&quot;: &quot;/images/parvin/scan-letter-2.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 2200,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article><article class="slot ">
+  <div class="frame" style="aspect-ratio:1600 / 2200"><span>1600 × 2200 px</span></div>
+  <div class="meta">
+    <h3>اسکن: یک شعر کوتاه از دفتر آبی <small>اختیاری</small></h3>
+    <p class="dim">1600 × 2200 px · WebP · حداکثر 300 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/scan-poem-1.webp</code> <button data-copy="public/images/parvin/scan-poem-1.webp">کپی مسیر</button></p>
+    <p>اسکن یا عکس مستقیم از بالا، نور یکنواخت، بدون سایه. حدود ۱۶۰۰ پیکسل عرض.</p>
+    <ul><li>صفحهٔ یادگارها، کنار متن تایپ‌شده</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;scan-poem-1&quot;,
+  &quot;src&quot;: &quot;/images/parvin/scan-poem-1.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;height&quot;: 2200,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<h2>تصاویر دیگر</h2><div class="grid"><article class="slot ">
+  <div class="frame" style="aspect-ratio:4 / 3"><span>ضلع بلند 1600 px</span></div>
+  <div class="meta">
+    <h3>عکس‌های اضافه (گالری، پیوست خاطره) <small>اختیاری</small></h3>
+    <p class="dim">ضلع بلند 1600 px · WebP · حداکثر 250 KB</p>
+    <p class="file"><code dir="ltr">public/images/parvin/extra.webp</code> <button data-copy="public/images/parvin/extra.webp">کپی مسیر</button></p>
+    <p>ضلع بلند ۱۶۰۰ پیکسل. نام فایل دلخواه ولی لاتین و با خط‌تیره.</p>
+    <ul><li>گالری، پیوست خاطره، خط زمانی</li></ul>
+    <p class="state">✗ فایل هنوز نیست</p>
+    <button data-copy='{
+  &quot;id&quot;: &quot;photo-1&quot;,
+  &quot;src&quot;: &quot;/images/parvin/extra.webp&quot;,
+  &quot;width&quot;: 1600,
+  &quot;title&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;caption&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;alt&quot;: {
+    &quot;fa&quot;: &quot;&quot;
+  },
+  &quot;license&quot;: &quot;permission-granted&quot;,
+  &quot;status&quot;: &quot;needs-verification&quot;
+}'>کپی ورودی gallery.json</button>
+  </div>
+</article></div>
+<script>
+document.addEventListener('click',function(e){var b=e.target.closest('[data-copy]');if(!b)return;var t=b.getAttribute('data-copy');
+(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){var o=b.textContent;b.textContent='کپی شد ✓';setTimeout(function(){b.textContent=o},1400)},function(){window.prompt('کپی کنید:',t)})});
+</script></main></body></html>

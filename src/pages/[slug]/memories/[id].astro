@@ -1,0 +1,42 @@
+---
+import MemorialLayout from '../../../layouts/MemorialLayout.astro';
+import MemoryCard from '../../../components/MemoryCard.astro';
+import { getMemorials, loadMemorial } from '../../../lib/memorial';
+import { href } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const out = [];
+  for (const m of await getMemorials()) {
+    const data = await loadMemorial(m.id);
+    if (!data.has.memories) continue;
+    for (const mem of data.memories) out.push({ params: { slug: m.id, id: mem.data.id } });
+  }
+  return out;
+}
+const { slug, id } = Astro.params;
+const data = await loadMemorial(slug!);
+const memory = data.memories.find((m) => m.data.id === id)!;
+const d = memory.data;
+const images = d.imageIds.map((i) => data.galleryById.get(i)).filter((g): g is NonNullable<typeof g> => Boolean(g));
+const summary = d.text.replace(/\s+/g, ' ').slice(0, 150).trimEnd();
+---
+
+<MemorialLayout
+  data={data}
+  section="memory"
+  path={`${data.slug}/memories/${d.id}`}
+  title={d.title ?? `خاطره‌ای از ${d.displayName}`}
+  article={{ headline: d.title ?? `خاطره‌ای از ${d.displayName}`, author: d.displayName, datePublished: d.date }}
+  description={`${d.displayName}${d.relationship ? ` (${d.relationship})` : ''}: ${summary}…`}
+>
+  <MemoryCard
+    memory={memory}
+    slug={data.slug}
+    calendar={data.calendar}
+    full
+    portrait={d.portraitId ? data.galleryById.get(d.portraitId) : undefined}
+    images={images}
+    video={d.videoId ? data.videoById.get(d.videoId) : undefined}
+  />
+  <p><a class="link-arrow" href={href(`${data.slug}/memories`)}>همهٔ خاطره‌ها</a></p>
+</MemorialLayout>

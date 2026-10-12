@@ -1,0 +1,95 @@
+---
+import MemorialLayout from '../../layouts/MemorialLayout.astro';
+import { loadMemorial, memorialPathsWith } from '../../lib/memorial';
+import { formatDate } from '../../lib/format';
+import { asset } from '../../lib/url';
+import { loc } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('keepsakes');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+
+const kindLabel = {
+  audio: 'صدا',
+  music: 'موسیقی',
+  letter: 'نامه',
+  handwriting: 'دست‌نوشته',
+  object: 'یادگار',
+} as const;
+const paragraphs = (s: string) => s.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+---
+
+<MemorialLayout
+  data={data}
+  section="keepsakes"
+  title="یادگارها"
+  description="صدا، موسیقی مورد علاقه، نامه‌ها، دست‌نوشته‌ها و چیزهای شخصیِ به‌جامانده."
+  lead="آنچه از خودِ او مانده: صدا، نامه، دست‌نوشته و چیزهای کوچک شخصی."
+>
+  <div class="items">
+    {
+      data.keepsakes.map((k) => {
+        const d = k.data;
+        const images = d.imageIds.map((i) => data.galleryById.get(i)).filter((g): g is NonNullable<typeof g> => Boolean(g));
+        return (
+          <article class:list={['keepsake', d.kind]} id={`k-${d.id}`}>
+            <p class="kind">{kindLabel[d.kind]}{d.date && <> · <time datetime={d.date}>{formatDate(d.date, 'exact', 'fa', data.calendar)}</time></>}</p>
+            <h2>{loc(d.title, 'fa')}</h2>
+            {d.description && <p class="desc">{loc(d.description, 'fa')}</p>}
+            {
+              d.audioSrc && (
+                <audio controls preload="none" src={asset(d.audioSrc)}>
+                  <a href={asset(d.audioSrc)}>دریافت فایل صوتی</a>
+                </audio>
+              )
+            }
+            {
+              images.length > 0 && (
+                <ul class="scans">
+                  {images.map((g) => (
+                    <li>
+                      <a href={asset(g.data.src)}><img src={asset(g.data.src)} alt={loc(g.data.alt, 'fa')} loading="lazy" decoding="async" width={g.data.width} height={g.data.height} /></a>
+                    </li>
+                  ))}
+                </ul>
+              )
+            }
+            {
+              d.text && (images.length > 0 ? (
+                <details>
+                  <summary>متن</summary>
+                  <div class="letter">{paragraphs(d.text).map((p) => <p>{p}</p>)}</div>
+                </details>
+              ) : (
+                <div class="letter">{paragraphs(d.text).map((p) => <p>{p}</p>)}</div>
+              ))
+            }
+          </article>
+        );
+      })
+    }
+  </div>
+</MemorialLayout>
+
+<style>
+  .items { display: grid; gap: var(--s-4); }
+  .keepsake { border-block-start: var(--border); padding-block-start: var(--s-3); }
+  .kind { color: var(--accent); font-weight: 700; font-size: 0.9rem; margin-block-end: 0.2rem; }
+  h2 { font-size: var(--fs-2); }
+  .desc { color: var(--ink-soft); }
+  audio { inline-size: 100%; margin-block: var(--s-1); }
+  .scans { list-style: none; margin: var(--s-2) 0; padding: 0; display: grid; gap: var(--s-1); }
+  .scans img { display: block; border-radius: var(--radius); }
+  .letter {
+    background: color-mix(in srgb, var(--paper-2) 60%, var(--paper));
+    border-radius: var(--radius);
+    padding: var(--s-3);
+    font-size: var(--fs-1);
+    line-height: 2.1;
+    margin-block-start: var(--s-1);
+  }
+  .letter p:last-child { margin-block-end: 0; }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 700; }
+</style>

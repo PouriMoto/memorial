@@ -1,0 +1,35 @@
+---
+import MemorialLayout from '../../layouts/MemorialLayout.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import { loadMemorial, memorialPathsWith } from '../../lib/memorial';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('videos');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+---
+
+<MemorialLayout
+  data={data}
+  section="videos"
+  title="ویدیوها"
+  description="ویدیوهای مرتبط که روی آپارات یا یوتیوب میزبانی شده‌اند، با ذکر منبع."
+  lead="ویدیوها روی پلتفرم‌های خارجی میزبانی می‌شوند و در این سایت ذخیره نشده‌اند."
+  wide
+>
+  {
+    data.videos.length > 0 ? (
+      <div class="list">{data.videos.map((v) => <VideoEmbed video={v} />)}</div>
+    ) : (
+      <div class="empty">
+        <p><strong>هنوز ویدیویی اضافه نشده است.</strong></p>
+        <p>ویدیوها فقط با نشانی معتبر آپارات یا یوتیوب و ذکر منبع افزوده می‌شوند. راهنمای محتوا (CONTENT-GUIDE.md) مراحل را توضیح می‌دهد.</p>
+      </div>
+    )
+  }
+</MemorialLayout>
+
+<style>
+  .list { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); }
+</style>

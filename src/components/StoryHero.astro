@@ -1,0 +1,134 @@
+---
+import { loc, t, type Lang } from '../lib/i18n';
+import { formatDate, lifeYear } from '../lib/format';
+import { asset } from '../lib/url';
+import Icon from './Icon.astro';
+import type { MemorialData } from '../lib/memorial';
+
+interface Props {
+  data: MemorialData;
+  lang?: Lang;
+}
+const { data, lang = 'fa' } = Astro.props;
+const m = data.memorial.data;
+const calendar = lang === 'fa' ? data.calendar : 'gregory';
+const birthYear = lifeYear(m.birth.date, lang, calendar);
+const deathYear = m.death ? lifeYear(m.death.date, lang, calendar) : undefined;
+const hero = m.heroImageId ? data.galleryById.get(m.heroImageId) : undefined;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap inner">
+    <div class="text">
+      <p class="eyebrow">{lang === 'en' ? 'Digital memorial' : 'یادبود دیجیتال'}</p>
+      <h1 id="hero-title">{loc(m.name, lang)}</h1>
+      <p class="years">
+        <span>{birthYear.primary}</span>
+        <span class="dash" aria-hidden="true"></span>
+        {deathYear && <span>{deathYear.primary}</span>}
+      </p>
+      {birthYear.secondary && <p class="years-alt"><span class="ltr">{birthYear.secondary}{deathYear?.secondary && ` – ${deathYear.secondary}`}</span></p>}
+      <p class="tagline">{loc(m.tagline, lang)}</p>
+      <dl class="facts">
+        <div>
+          <dt>{t(lang, 'born')}</dt>
+          <dd>
+            {formatDate(m.birth.date, m.birth.precision, lang, calendar)}
+            {m.birth.place && <>، {loc(m.birth.place, lang)}</>}
+          </dd>
+        </div>
+        {
+          m.death && (
+            <div>
+              <dt>{t(lang, 'died')}</dt>
+              <dd>
+                {formatDate(m.death.date, m.death.precision, lang, calendar)}
+                {m.death.place && <>، {loc(m.death.place, lang)}</>}
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+    </div>
+    {
+      hero && (
+        <figure class="portrait">
+          <img src={asset(hero.data.src)} alt={loc(hero.data.alt, lang)} width={hero.data.width} height={hero.data.height} decoding="async" fetchpriority="high" />
+          <figcaption>{loc(hero.data.caption, lang)}</figcaption>
+        </figure>
+      )
+    }
+  </div>
+  <a class="cue" href="#opening">
+    <span>{t(lang, 'scrollCue')}</span>
+    <Icon name="chevron" size={28} class="bounce" />
+  </a>
+</section>
+
+<style>
+  .hero {
+    background: var(--night);
+    color: var(--night-ink);
+    min-block-size: min(92svh, 52rem);
+  }
+  @media (max-width: 59.99em) {
+    .hero { min-block-size: calc(100svh - 12rem); }
+  }
+  .hero {
+    display: grid;
+    align-items: center;
+    padding-block: var(--s-6) 6rem;
+    position: relative;
+    margin-block-start: -1px;
+  }
+  .inner { display: grid; gap: var(--s-4); align-items: center; }
+  @media (min-width: 60em) {
+    .inner:has(.portrait) { grid-template-columns: 1.3fr 1fr; }
+  }
+  .eyebrow { color: var(--night-soft); }
+  h1 { font-size: var(--fs-hero); font-weight: 900; line-height: 1.1; margin-block-end: var(--s-3); }
+  .years {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--fs-2);
+    color: var(--night-soft);
+    margin-block-end: var(--s-2);
+  }
+  .years-alt { color: var(--night-soft); font-size: 0.95rem; margin-block: -0.5rem var(--s-2); }
+  .dash { flex: 0 0 clamp(3rem, 12vw, 8rem); block-size: 1px; background: var(--night-soft); }
+  .tagline { font-size: var(--fs-1); max-inline-size: 34rem; color: var(--night-ink); }
+  .facts { display: grid; gap: var(--s-1); margin: var(--s-4) 0 0; font-size: 0.95rem; color: var(--night-soft); }
+  .facts div { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+  dt { font-weight: 700; color: var(--night-ink); min-inline-size: 4.5rem; }
+  dd { margin: 0; }
+  .portrait { margin: 0; }
+  .portrait { position: relative; }
+  .portrait img {
+    display: block; inline-size: 100%; block-size: auto; max-block-size: 70svh; object-fit: cover; object-position: top;
+    /* The portrait melts into the dark background at the bottom. */
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  }
+  .portrait figcaption { color: var(--night-soft); font-size: 0.85rem; margin-block-start: 0.4rem; }
+  .text > * { animation: rise 0.9s ease both; }
+  .text > :nth-child(2) { animation-delay: 0.08s; }
+  .text > :nth-child(3) { animation-delay: 0.16s; }
+  .text > :nth-child(n + 4) { animation-delay: 0.24s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .text > * { animation: none; } }
+  .portrait figcaption { font-size: 0.85rem; color: var(--night-soft); padding-block-start: var(--s-1); }
+  .cue {
+    position: absolute;
+    inset-block-end: var(--s-2);
+    inset-inline: 0;
+    text-align: center;
+    color: var(--night-soft);
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .cue { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; }
+  .cue :global(.bounce) { animation: bounce 1.8s ease-in-out infinite; }
+  @keyframes bounce { 0%, 100% { transform: translateY(0); opacity: 0.6; } 50% { transform: translateY(7px); opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .cue :global(.bounce) { animation: none; } }
+</style>

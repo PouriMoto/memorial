@@ -1,0 +1,182 @@
+[
+  {
+    "id": "birth-1939",
+    "date": "1939-04-19",
+    "precision": "exact",
+    "title": { "fa": "تولد در مشهد", "en": "Born in Mashhad" },
+    "description": {
+      "fa": "علی خامنه‌ای در ۱۹ آوریل ۱۹۳۹ در مشهد به دنیا آمد؛ فرزند جواد خامنه‌ای، روحانی‌ای که زادهٔ نجف بود.",
+      "en": "Ali Khamenei was born in Mashhad on 19 April 1939, the son of Javad Khamenei, a cleric who was born in Najaf."
+    },
+    "milestone": true,
+    "storyId": "01-mashhad",
+    "sourceIds": ["wikipedia-en-khamenei", "britannica-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "qom-1958",
+    "date": "1958",
+    "precision": "year",
+    "title": { "fa": "اقامت در قم و درس امام خمینی", "en": "Settling in Qom, studying with Khomeini" },
+    "description": {
+      "fa": "پس از تحصیل در حوزهٔ علمیهٔ مشهد، در ۱۹۵۸ به قم رفت و در کلاس‌های درس روح‌الله خمینی شرکت کرد.",
+      "en": "After studying in the Mashhad seminary, he settled in Qom in 1958 and attended the classes of Ruhollah Khomeini."
+    },
+    "milestone": false,
+    "storyId": "02-qom",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "first-arrest-1963",
+    "date": "1963",
+    "precision": "approximate",
+    "title": { "fa": "نخستین بازداشت", "en": "First arrest" },
+    "description": {
+      "fa": "به نقل از پایگاه رسمی او (در ویکی‌پدیا)، ساواک او را شش بار بازداشت کرد. نخستین بازداشت پس از تظاهرات ۱۹۶۳ در اعتراض به بازداشت امام خمینی ذکر شده است.",
+      "en": "According to his official website (as cited on Wikipedia), SAVAK arrested him six times. The first arrest is placed after the 1963 demonstrations against Khomeini’s arrest."
+    },
+    "milestone": false,
+    "storyId": "03-years-of-struggle",
+    "sourceIds": ["wikipedia-en-khamenei", "khamenei-ir"],
+    "status": "needs-verification"
+  },
+  {
+    "id": "marriage-1964",
+    "date": "1964",
+    "precision": "year",
+    "title": { "fa": "ازدواج", "en": "Marriage" },
+    "description": {
+      "fa": "در ۱۹۶۴ ازدواج کرد. ویکی‌پدیا شمار فرزندان او را شش نفر ذکر می‌کند.",
+      "en": "He married in 1964. Wikipedia gives the number of his children as six."
+    },
+    "milestone": false,
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "exile-1976",
+    "date": "1976",
+    "precision": "year",
+    "title": { "fa": "تبعید", "en": "Exile" },
+    "description": {
+      "fa": "در ۱۹۷۶ به مدت سه سال، تا پایان حکومت شاه، تبعید شد.",
+      "en": "In 1976 he was exiled for three years, until the end of the Shah’s rule."
+    },
+    "milestone": false,
+    "storyId": "03-years-of-struggle",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "bombing-1981",
+    "date": "1981-06-27",
+    "precision": "exact",
+    "title": { "fa": "انفجار در مسجد ابوذر", "en": "The Aboozar Mosque bombing" },
+    "description": {
+      "fa": "در ۲۷ ژوئن ۱۹۸۱ بمبی که در یک ضبط‌صوت جاسازی شده بود در کنار او منفجر شد. او از ناحیهٔ بازو، تارهای صوتی و ریه آسیب جدی دید و دست راستش برای همیشه ناتوان ماند. او زنده ماند.",
+      "en": "On 27 June 1981 a bomb hidden in a tape recorder exploded beside him at the Aboozar Mosque. He was seriously injured in the arm, vocal cords and lungs and lost the use of his right arm permanently. He survived."
+    },
+    "milestone": true,
+    "storyId": "04-presidency",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "presidency-1981",
+    "date": "1981-10-09",
+    "precision": "exact",
+    "title": { "fa": "آغاز ریاست‌جمهوری", "en": "Taking office as president" },
+    "description": {
+      "fa": "پس از ترور محمدعلی رجایی، در انتخابات اکتبر ۱۹۸۱ به ریاست‌جمهوری برگزیده شد و در ۹ اکتبر ۱۹۸۱ کار خود را آغاز کرد.",
+      "en": "After the assassination of Mohammad-Ali Rajai, he was elected in the October 1981 election and took office as president on 9 October 1981."
+    },
+    "milestone": true,
+    "storyId": "04-presidency",
+    "sourceIds": ["wikipedia-en-khamenei", "britannica-khamenei"],
+    "status": "verified"
+  },
+  {
+    "id": "leader-elected-1989",
+    "date": "1989-06-04",
+    "precision": "exact",
+    "title": { "fa": "انتخاب به رهبری", "en": "Elected Supreme Leader" },
+    "description": {
+      "fa": "پس از درگذشت امام خمینی، مجلس خبرگان رهبری در ۴ ژوئن ۱۹۸۹ او را برگزید. به نوشتهٔ ویکی‌پدیا، خودش گفت که طبق قانون اساسی آن زمان شرایط مرجعیت را ندارد.",
+      "en": "After Khomeini’s death, the Assembly of Experts elected him on 4 June 1989. Wikipedia reports that he said he did not meet the marja‘ requirement the constitution then set."
+    },
+    "milestone": true,
+    "storyId": "05-leadership",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "referendum-1989",
+    "date": "1989-07-28",
+    "precision": "exact",
+    "title": { "fa": "همه‌پرسی اصلاح قانون اساسی", "en": "Constitutional referendum" },
+    "description": {
+      "fa": "در ۲۸ ژوئیهٔ ۱۹۸۹ همه‌پرسی‌ای شرط مرجعیت برای رهبر را از قانون اساسی حذف کرد.",
+      "en": "A referendum on 28 July 1989 removed the marja‘ requirement for the leader from the constitution."
+    },
+    "milestone": false,
+    "storyId": "05-leadership",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "leader-confirmed-1989",
+    "date": "1989-08-06",
+    "precision": "exact",
+    "title": { "fa": "تأیید قطعی رهبری", "en": "Confirmed as permanent leader" },
+    "description": {
+      "fa": "در ۶ اوت ۱۹۸۹ مجلس خبرگان او را به‌طور قطعی در مقام رهبری تأیید کرد.",
+      "en": "On 6 August 1989 the Assembly of Experts confirmed him as permanent leader."
+    },
+    "milestone": false,
+    "storyId": "05-leadership",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  },
+  {
+    "id": "presidency-end-1989",
+    "date": "1989-08-16",
+    "precision": "exact",
+    "title": { "fa": "پایان ریاست‌جمهوری", "en": "End of presidency" },
+    "description": {
+      "fa": "دورهٔ ریاست‌جمهوری او (۹ اکتبر ۱۹۸۱ تا ۱۶ اوت ۱۹۸۹) پایان یافت.",
+      "en": "His presidency (9 October 1981 to 16 August 1989) came to an end."
+    },
+    "milestone": false,
+    "sourceIds": ["wikipedia-en-khamenei", "britannica-khamenei"],
+    "status": "verified"
+  },
+  {
+    "id": "death-2026",
+    "date": "2026-02-28",
+    "precision": "exact",
+    "title": { "fa": "درگذشت", "en": "Death" },
+    "description": {
+      "fa": "رسانهٔ دولتی ایران در ۲۸ فوریهٔ ۲۰۲۶ درگذشت او را تأیید کرد و دولت ۴۰ روز عزای عمومی اعلام کرد. گزارش‌ها حاکی است که در حملهٔ هوایی در جریان جنگ ۲۰۲۶ کشته شد.",
+      "en": "Iranian state media confirmed his death on 28 February 2026 and the government declared 40 days of mourning. Reports say he was killed in an air strike during the 2026 war."
+    },
+    "milestone": true,
+    "storyId": "07-farewell",
+    "sourceIds": ["npr-2026-02-28", "cnbc-2026-02-28", "wikipedia-en-khamenei"],
+    "status": "verified"
+  },
+  {
+    "id": "successor-2026",
+    "date": "2026-03-08",
+    "precision": "exact",
+    "title": { "fa": "انتخاب جانشین", "en": "Successor elected" },
+    "description": {
+      "fa": "به نوشتهٔ ویکی‌پدیا، مجلس خبرگان در ۸ مارس ۲۰۲۶ مجتبی خامنه‌ای، پسر او، را به رهبری برگزید.",
+      "en": "Wikipedia reports that on 8 March 2026 the Assembly of Experts elected his son Mojtaba Khamenei as successor."
+    },
+    "milestone": false,
+    "storyId": "07-farewell",
+    "sourceIds": ["wikipedia-en-khamenei"],
+    "status": "single-source"
+  }
+]

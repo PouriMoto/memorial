@@ -1,0 +1,11 @@
+---
+import StoryPage from '../../components/StoryPage.astro';
+import { memorialPaths } from '../../lib/memorial';
+
+export async function getStaticPaths() {
+  return memorialPaths();
+}
+const { slug } = Astro.params;
+---
+
+<StoryPage slug={slug!} lang="fa" />

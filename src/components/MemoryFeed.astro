@@ -1,0 +1,114 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import MemoryCard from './MemoryCard.astro';
+import { memoryTopics } from '../lib/memorial';
+import type { MemorialData } from '../lib/memorial';
+
+interface Props {
+  data: MemorialData;
+  memories: CollectionEntry<'memories'>[];
+}
+const { data, memories } = Astro.props;
+const topics = memoryTopics(memories);
+---
+
+<div class="feed" data-feed>
+  {
+    memories.length > 1 && (
+      <div class="tools js-only">
+        <label class="visually-hidden" for="feed-q">جست‌وجو در خاطره‌ها</label>
+        <input id="feed-q" type="search" placeholder="جست‌وجو: نام گوینده یا موضوع" autocomplete="off" />
+        {
+          topics.length > 0 && (
+            <ul class="chips" aria-label="فیلتر موضوع">
+              {topics.map((tp) => (
+                <li><button type="button" class="chip" data-topic={tp} aria-pressed="false">{tp}</button></li>
+              ))}
+            </ul>
+          )
+        }
+        <p class="count" role="status" aria-live="polite"></p>
+      </div>
+    )
+  }
+
+  <div class="list">
+    {
+      memories.map((m) => (
+        <MemoryCard
+          memory={m}
+          level={2}
+          slug={data.slug}
+          calendar={data.calendar}
+          portrait={m.data.portraitId ? data.galleryById.get(m.data.portraitId) : undefined}
+          images={m.data.imageIds.map((id) => data.galleryById.get(id)).filter((g): g is NonNullable<typeof g> => Boolean(g))}
+          video={m.data.videoId ? data.videoById.get(m.data.videoId) : undefined}
+        />
+      ))
+    }
+  </div>
+  <p class="none" hidden>نتیجه‌ای پیدا نشد. عبارت دیگری را امتحان کنید.</p>
+</div>
+
+<script>
+  // Persian-aware normalisation so "ي/ك", half-spaces, digits and case do not break matching.
+  const norm = (s: string) =>
+    s
+      .replace(/ي/g, 'ی').replace(/ك/g, 'ک')
+      .replace(/[‌‏‎]/g, ' ')
+      .replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+      .replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .trim();
+
+  document.querySelectorAll<HTMLElement>('[data-feed]').forEach((feed) => {
+    const input = feed.querySelector<HTMLInputElement>('input[type="search"]');
+    if (!input) return;
+    const cards = [...feed.querySelectorAll<HTMLElement>('[data-memory]')];
+    const index = cards.map((c) => ({ el: c, text: norm(c.dataset.search ?? ''), topics: (c.dataset.topics ?? '').split('|').filter(Boolean) }));
+    const chips = [...feed.querySelectorAll<HTMLButtonElement>('[data-topic]')];
+    const count = feed.querySelector<HTMLElement>('.count');
+    const none = feed.querySelector<HTMLElement>('.none');
+    let topic = '';
+
+    const apply = () => {
+      const words = norm(input.value).split(' ').filter(Boolean);
+      let shown = 0;
+      for (const { el, text, topics } of index) {
+        const ok = words.every((w) => text.includes(w)) && (!topic || topics.includes(topic));
+        el.hidden = !ok;
+        if (ok) shown++;
+      }
+      if (none) none.hidden = shown !== 0;
+      const filtering = words.length > 0 || topic !== '';
+      if (count) count.textContent = filtering ? `${new Intl.NumberFormat('fa-IR').format(shown)} خاطره` : '';
+    };
+    input.addEventListener('input', apply);
+    chips.forEach((b) =>
+      b.addEventListener('click', () => {
+        topic = topic === b.dataset.topic ? '' : (b.dataset.topic ?? '');
+        chips.forEach((o) => o.setAttribute('aria-pressed', String(o.dataset.topic === topic)));
+        apply();
+      }),
+    );
+  });
+</script>
+
+<style>
+  .tools { display: grid; gap: var(--s-2); margin-block-end: var(--s-3); }
+  input[type='search'] {
+    inline-size: 100%;
+    font: inherit;
+    padding: 0.6rem 1.1rem;
+    min-block-size: 44px;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-pill);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .count { margin: 0; font-size: 0.88rem; color: var(--ink-faint); min-block-size: 1.4em; }
+  .none { color: var(--ink-soft); }
+  [hidden] { display: none !important; }
+</style>

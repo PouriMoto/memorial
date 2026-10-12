@@ -1,0 +1,44 @@
+{
+  "name": {
+    "fa": "پروین آریان‌فر",
+    "en": "Parvin Aryanfar"
+  },
+  "nameLatin": "Parvin Aryanfar",
+  "tagline": {
+    "fa": "معلمی که کتاب را به دست بچه‌های محله رساند.",
+    "en": "The teacher who put books into the hands of the neighbourhood's children."
+  },
+  "summary": {
+    "fa": "پروین آریان‌فر در محلهٔ قدیمی شیراز بزرگ شد، چهل و دو سال ادبیات درس داد و در سال‌های بازنشستگی کتابخانهٔ کوچک محله را راه انداخت. دوستش داشتند چون هر کتابی را به آدم درست می‌رساند. شعر حفظ می‌کرد، چای را دو بار دم می‌کرد و نامه‌هایش را با دست می‌نوشت.",
+    "en": "Parvin Aryanfar grew up in an old neighbourhood of Shiraz, taught literature for forty-two years and, in retirement, started the neighbourhood's small library. People loved her because she gave every person the right book. She memorised poems, brewed her tea twice and wrote her letters by hand."
+  },
+  "birth": {
+    "date": "1948-03-12",
+    "precision": "exact",
+    "place": {
+      "fa": "شیراز",
+      "en": "Shiraz"
+    }
+  },
+  "death": {
+    "date": "2023-11-05",
+    "precision": "exact",
+    "place": {
+      "fa": "شیراز",
+      "en": "Shiraz"
+    }
+  },
+  "sourceIds": [],
+  "featured": true,
+  "sample": true,
+  "calendar": "persian",
+  "enabledSections": {
+    "biography": true,
+    "timeline": true,
+    "gallery": true,
+    "videos": true,
+    "memories": true,
+    "keepsakes": true,
+    "sources": false
+  }
+}

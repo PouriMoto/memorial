@@ -1,0 +1,70 @@
+---
+// Order page for custom memorials. Only built when features.studio is on.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { activeContacts, primaryContactUrl, settings } from '../lib/site';
+import { loc } from '../lib/i18n';
+import { href } from '../lib/url';
+import { getFeaturedMemorial } from '../lib/memorial';
+
+const featured = await getFeaturedMemorial();
+const parts = [
+  ['زندگی‌نامه', 'متنی پیوسته از زندگی، با کمک شما و نزدیکان.'],
+  ['تصویرها', 'گالری عکس‌های خانوادگی یا قدیمی، با شرح هر تصویر.'],
+  ['ویدیوها', 'ویدیوهایی که روی آپارات یا یوتیوب هستند و در صفحه نمایش داده می‌شوند.'],
+  ['خط زمانی', 'رویدادهای مهم به ترتیب زمان، با تاریخ شمسی یا میلادی.'],
+  ['خاطره‌های خانواده و دوستان', 'خاطره‌هایی که پس از بررسی و با اجازهٔ نویسنده منتشر می‌شوند.'],
+  ['یادگارها', 'صدا، موسیقی مورد علاقه، نامه‌ها و دست‌نوشته‌ها.'],
+  ['QR و NFC', 'نشانی کوتاه و دائمی، برای سنگ مزار یا کارت دعوت.'],
+];
+---
+
+<BaseLayout
+  title="سفارش یادبود اختصاصی | یادبود دیجیتال"
+  description="سفارش یک وب‌سایت یادبود اختصاصی با زندگی‌نامه، تصویر، ویدیو، خط زمانی، خاطره و یادگارها."
+  path="order"
+  slug={featured?.id}
+  current="order"
+>
+  <div class="wrap--text head">
+    <p class="eyebrow">سفارش یادبود</p>
+    <h1>{loc(settings.orderCta.heading, 'fa')}</h1>
+    <p class="lead">{loc(settings.orderCta.text, 'fa')}</p>
+  </div>
+  <div class="wrap--text prose">
+    <h2>یادبود اختصاصی شامل چه چیزی است؟</h2>
+    <ul class="parts">
+      {parts.map(([t, d]) => <li><strong>{t}</strong><span>{d}</span></li>)}
+    </ul>
+
+    <h2>روش کار</h2>
+    <p>
+      سایت‌ها سبک و سریع‌اند و محتوا در فایل‌های متنی نگهداری می‌شود. قیمت و زمان‌بندی پس از گفت‌وگو دربارهٔ حجم
+      محتوا اعلام می‌شود؛ در این صفحه قیمتی درج نشده است.
+    </p>
+
+    <h2>درخواست</h2>
+    {
+      primaryContactUrl || activeContacts.length > 0 ? (
+        <p class="actions">
+          {primaryContactUrl && <a class="btn btn--solid" href={primaryContactUrl} rel="noopener noreferrer">{loc(settings.orderCta.primaryContactLabel, 'fa') || 'تماس با سازنده'}</a>}
+          {activeContacts.map((l) => <a class="btn" href={l.url} rel="noopener noreferrer">{l.label}</a>)}
+        </p>
+      ) : (
+        <div class="empty">
+          <p><strong>راه تماس هنوز تنظیم نشده است.</strong></p>
+          <p>در فایل <code>src/content/site/settings.json</code>، بخش <code>contactLinks</code>، نشانی تلگرام، ایمیل یا شبکهٔ دیگر را بگذارید.</p>
+        </div>
+      )
+    }
+    <p><a class="link-arrow" href={href('about')}>دربارهٔ سازنده</a></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .head { padding-block: var(--s-5) var(--s-2); }
+  .lead { font-size: var(--fs-1); color: var(--ink-soft); }
+  .parts { list-style: none; padding: 0; margin: 0; }
+  .parts li { display: grid; gap: 0.1rem; padding-block: 0.8rem; border-block-end: var(--border); }
+  .parts span { color: var(--ink-soft); font-size: 0.95em; }
+  .actions { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+</style>

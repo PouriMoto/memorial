@@ -1,0 +1,169 @@
+[
+  {
+    "id": "birth",
+    "date": "1948-03-12",
+    "precision": "exact",
+    "title": {
+      "fa": "تولد در شیراز",
+      "en": "Born in Shiraz"
+    },
+    "description": {
+      "fa": "پروین در کوچه‌ای پر از درخت نارنج به دنیا آمد.",
+      "en": "Parvin was born in an alley lined with orange trees."
+    },
+    "milestone": true,
+    "storyId": "01-orange-alley",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "notebook",
+    "date": "1960",
+    "precision": "approximate",
+    "title": {
+      "fa": "نخستین دفتر شعر",
+      "en": "The first poetry notebook"
+    },
+    "description": {
+      "fa": "دفتر جلد آبی و اولین شعرها.",
+      "en": "A blue-covered notebook and the first poems."
+    },
+    "milestone": false,
+    "storyId": "02-blue-notebook",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "school",
+    "date": "1966-06-20",
+    "precision": "exact",
+    "title": {
+      "fa": "پایان دبیرستان",
+      "en": "Finishing high school"
+    },
+    "description": {
+      "fa": "دبیرستان را تمام کرد و راهی دانشگاه شد.",
+      "en": "She finished high school and went on to university."
+    },
+    "milestone": false,
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "teaching",
+    "date": "1970-09-23",
+    "precision": "exact",
+    "title": {
+      "fa": "شروع معلمی",
+      "en": "Starting to teach"
+    },
+    "description": {
+      "fa": "کلاس شمارهٔ سه در یک مدرسهٔ دخترانه.",
+      "en": "Classroom Number Three at a girls' school."
+    },
+    "milestone": true,
+    "storyId": "03-classroom-three",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "wedding",
+    "date": "1974-05-10",
+    "precision": "exact",
+    "title": {
+      "fa": "ازدواج",
+      "en": "Marriage"
+    },
+    "description": {
+      "fa": "خانه‌ای که قفسهٔ کتابش بیشتر از مبل بود.",
+      "en": "A home with more bookshelves than sofas."
+    },
+    "milestone": false,
+    "storyId": "04-house-of-books",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "negar",
+    "date": "1977-02-02",
+    "precision": "exact",
+    "title": {
+      "fa": "تولد نگار",
+      "en": "Birth of Negar"
+    },
+    "description": {
+      "fa": "فرزند اول خانواده به دنیا آمد.",
+      "en": "The family's first child was born."
+    },
+    "milestone": false,
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "kamran",
+    "date": "1981-08-14",
+    "precision": "exact",
+    "title": {
+      "fa": "تولد کامران",
+      "en": "Birth of Kamran"
+    },
+    "description": {
+      "fa": "فرزند دوم به خانواده پیوست.",
+      "en": "The second child joined the family."
+    },
+    "milestone": false,
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "award",
+    "date": "1995",
+    "precision": "approximate",
+    "title": {
+      "fa": "معلم نمونهٔ منطقه",
+      "en": "Exemplary teacher of the district"
+    },
+    "description": {
+      "fa": "لوح را در کشوی میز گذاشت، کنار گچ‌ها.",
+      "en": "She put the plaque in her desk drawer, next to the chalk."
+    },
+    "milestone": true,
+    "storyId": "05-forty-two-years",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "library",
+    "date": "2012-10-01",
+    "precision": "exact",
+    "title": {
+      "fa": "آغاز کتابخانهٔ محله",
+      "en": "The neighbourhood library opens"
+    },
+    "description": {
+      "fa": "بازنشسته شد و گوشه‌ای را به کتاب‌ها داد.",
+      "en": "She retired and gave a corner to books."
+    },
+    "milestone": true,
+    "storyId": "06-library",
+    "sourceIds": [],
+    "status": "verified"
+  },
+  {
+    "id": "death",
+    "date": "2023-11-05",
+    "precision": "exact",
+    "title": {
+      "fa": "درگذشت",
+      "en": "Passing"
+    },
+    "description": {
+      "fa": "در شیراز از دنیا رفت؛ کتابخانه هنوز باز است.",
+      "en": "She died in Shiraz; the library is still open."
+    },
+    "milestone": true,
+    "storyId": "07-second-tea",
+    "sourceIds": [],
+    "status": "verified"
+  }
+]

@@ -1,0 +1,36 @@
+---
+import MemorialLayout from '../../../layouts/MemorialLayout.astro';
+import MemoryFeed from '../../../components/MemoryFeed.astro';
+import { loadMemorial, memorialPathsWith } from '../../../lib/memorial';
+import { href } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  return memorialPathsWith('memories');
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+---
+
+<MemorialLayout
+  data={data}
+  section="memories"
+  title="خاطره‌ها"
+  description="خاطره‌هایی که دیگران نوشته‌اند و با اجازهٔ نویسنده منتشر شده‌اند؛ قابل جست‌وجو با نام گوینده یا موضوع."
+  lead="خاطره‌ها و قصه‌هایی که نزدیکان و آشنایان نوشته‌اند."
+>
+  {
+    data.memories.length > 0 ? (
+      <MemoryFeed data={data} memories={data.memories} />
+    ) : (
+      <div class="empty">
+        <p><strong>هنوز خاطره‌ای منتشر نشده است.</strong></p>
+        <p>اگر خاطره‌ای دارید، آن را بفرستید. هر خاطره پیش از انتشار بررسی می‌شود و فقط با اجازهٔ نویسنده منتشر می‌شود.</p>
+      </div>
+    )
+  }
+  <p class="invite"><a class="btn btn--solid" href={href('submit-memory')}>ثبت خاطره</a></p>
+</MemorialLayout>
+
+<style>
+  .invite { margin-block-start: var(--s-3); }
+</style>

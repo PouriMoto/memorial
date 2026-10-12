@@ -1,0 +1,58 @@
+[
+  {
+    "id": "khamenei-ir",
+    "title": "khamenei.ir",
+    "publisher": "پایگاه رسمی منسوب به دفتر ایشان (khamenei.ir)",
+    "url": "https://khamenei.ir/",
+    "type": "primary",
+    "relevance": "منبع اولیهٔ نوشته‌ها، سخنان و زندگی‌نامهٔ رسمی. مرجع اصلی برای متنی که خود او یا دفترش منتشر کرده است.",
+    "status": "link-only",
+    "note": "نشانی ثبت شده است اما متن آن بررسی نشده: دسترسی خودکار از ابزار پژوهش این پروژه توسط robots.txt سایت مسدود بود و دور زده نشد. هیچ ادعایی در این وب‌سایت هنوز مستقیماً به این پایگاه نسبت داده نشده است. برای افزودن متن، آن را دستی از سایت بخوانید و با ارجاع در فایل‌های محتوا بگذارید (راهنمای محتوا را ببینید)."
+  },
+  {
+    "id": "wikipedia-en-khamenei",
+    "title": "Ali Khamenei",
+    "publisher": "Wikipedia (English)",
+    "url": "https://en.wikipedia.org/wiki/Ali_Khamenei",
+    "accessedAt": "2026-10-11",
+    "type": "secondary",
+    "relevance": "تولد، تحصیل، بازداشت‌ها و تبعید، سوءقصد ۱۹۸۱، ریاست‌جمهوری، انتخاب به رهبری ۱۹۸۹، خانواده و درگذشت.",
+    "status": "partially-verified",
+    "note": "دانشنامهٔ همگانی؛ متن آن خوانده شد ولی تک‌تک ادعاها مستقلاً با منبع دیگر مقایسه نشد. برخی تاریخ‌ها در خود مقاله به منابع رسمی نسبت داده شده‌اند (مثلاً تعداد بازداشت‌ها)."
+  },
+  {
+    "id": "npr-2026-02-28",
+    "title": "Iran's supreme leader, Ayatollah Ali Khamenei, has been killed",
+    "publisher": "NPR",
+    "url": "https://www.npr.org/2026/02/28/nx-s1-5730158/israel-iran-strikes-trump-us",
+    "publishedAt": "2026-02-28",
+    "accessedAt": "2026-10-11",
+    "type": "secondary",
+    "relevance": "گزارش همان روز دربارهٔ تأیید درگذشت از سوی رسانهٔ دولتی ایران، اعلام ۴۰ روز عزای عمومی و زمینهٔ رویداد.",
+    "status": "partially-verified",
+    "note": "رسانهٔ خبری معتبر؛ متن با ابزار خلاصه‌ساز خوانده شد. جزئیات عملیات نظامی نسبت داده‌شده به منابع و مقام‌های مختلف است و این وب‌سایت آن‌ها را مستقل تأیید نمی‌کند."
+  },
+  {
+    "id": "cnbc-2026-02-28",
+    "title": "Ayatollah Ali Khamenei is dead, state news media confirms",
+    "publisher": "CNBC",
+    "url": "https://www.cnbc.com/2026/02/28/trump-iran-strikes-live-updates.html",
+    "publishedAt": "2026-02-28",
+    "accessedAt": "2026-10-11",
+    "type": "secondary",
+    "relevance": "پوشش زندهٔ همان روز؛ تیتر آن تأیید رسانهٔ دولتی را گزارش می‌کند.",
+    "status": "link-only",
+    "note": "فقط تیتر و نشانی در نتایج جست‌وجو دیده شد؛ بازکردن متن صفحه ناموفق بود."
+  },
+  {
+    "id": "britannica-khamenei",
+    "title": "Ali Khamenei",
+    "publisher": "Encyclopaedia Britannica",
+    "url": "https://www.britannica.com/biography/Ali-Khamenei",
+    "accessedAt": "2026-10-11",
+    "type": "secondary",
+    "relevance": "سال‌های زندگی (۱۹۳۹–۲۰۲۶)، ریاست‌جمهوری (۱۹۸۱–۱۹۸۹) و رهبری (۱۹۸۹–۲۰۲۶).",
+    "status": "partially-verified",
+    "note": "فقط داده‌های خلاصهٔ صفحه بررسی شد (سال‌ها)، نه روز و ماه."
+  }
+]

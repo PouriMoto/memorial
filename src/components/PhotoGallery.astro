@@ -1,0 +1,150 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { loc, t, type Lang } from '../lib/i18n';
+import { formatDate } from '../lib/format';
+import { asset } from '../lib/url';
+
+interface Props {
+  items: CollectionEntry<'gallery'>[];
+  lang?: Lang;
+  /** Show full attribution under every photo (gallery page) or only the caption (home strip). */
+  detailed?: boolean;
+}
+const { items, lang = 'fa', detailed = true } = Astro.props;
+
+const licenseLabel: Record<string, string> = {
+  'public-domain': 'مالکیت عمومی',
+  cc0: 'CC0',
+  'cc-by': 'CC BY',
+  'cc-by-sa': 'CC BY-SA',
+  'permission-granted': 'با اجازهٔ صاحب اثر',
+  'all-rights-reserved': 'همهٔ حقوق محفوظ',
+  unknown: 'مجوز نامشخص',
+};
+---
+
+<ul class="gallery" data-gallery>
+  {
+    items.map((item) => {
+      const d = item.data;
+      return (
+        <li id={`photo-${d.id}`}>
+          <figure>
+            <a
+              class="photo"
+              href={asset(d.src)}
+              data-full={asset(d.src)}
+              data-caption={loc(d.caption, lang)}
+              data-alt={loc(d.alt, lang)}
+              aria-label={`${loc(d.title, lang)}`}
+            >
+              <img
+                src={asset(d.src)}
+                alt={loc(d.alt, lang)}
+                loading="lazy"
+                decoding="async"
+                width={d.width}
+                height={d.height}
+              />
+            </a>
+            <figcaption>
+              <strong>{loc(d.title, lang)}</strong>
+              <span>{loc(d.caption, lang)}</span>
+              {d.date && (
+                <span class="meta">
+                  <time datetime={d.date}>{formatDate(d.date, d.datePrecision ?? 'exact', lang)}</time>
+                </span>
+              )}
+              {detailed && (
+                <span class="meta">
+                  {d.creator && (
+                    <>
+                      {t(lang, 'credit')}: <bdi>{d.creator}</bdi>
+                      {' · '}
+                    </>
+                  )}
+                  {t(lang, 'license')}:{' '}
+                  {d.licenseUrl ? <a href={d.licenseUrl} rel="noopener noreferrer">{licenseLabel[d.license]}</a> : licenseLabel[d.license]}
+                  {d.sourceUrl && (
+                    <>
+                      {' · '}
+                      <a href={d.sourceUrl} rel="noopener noreferrer">{t(lang, 'source')}</a>
+                    </>
+                  )}
+                </span>
+              )}
+            </figcaption>
+          </figure>
+        </li>
+      );
+    })
+  }
+</ul>
+
+<dialog class="viewer" aria-label={t(lang, 'photos')}>
+  <form method="dialog"><button class="close" aria-label={t(lang, 'closeViewer')}>×</button></form>
+  <img alt="" />
+  <p class="viewer-caption"></p>
+</dialog>
+
+<script>
+  // Lightweight viewer. Without JS, thumbnails are plain links to the full image.
+  document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+    const dialog = gallery.parentElement?.querySelector<HTMLDialogElement>('dialog.viewer');
+    if (!dialog) return;
+    const img = dialog.querySelector('img')!;
+    const cap = dialog.querySelector('.viewer-caption')!;
+    gallery.addEventListener('click', (e) => {
+      const link = (e.target as HTMLElement).closest<HTMLAnchorElement>('a.photo');
+      if (!link) return;
+      e.preventDefault();
+      img.src = link.dataset.full ?? link.href;
+      img.alt = link.dataset.alt ?? '';
+      cap.textContent = link.dataset.caption ?? '';
+      dialog.showModal();
+    });
+    // click on the backdrop closes
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+  });
+</script>
+
+<style>
+  .gallery {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-3);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  }
+  figure { margin: 0; }
+  .photo { display: block; background: var(--paper-2); }
+  .photo img { display: block; inline-size: 100%; block-size: auto; aspect-ratio: 4 / 3; object-fit: cover; }
+  figcaption { font-size: 0.92rem; line-height: 1.7; padding-block-start: var(--s-1); display: grid; gap: 0.15rem; }
+  .meta { color: var(--ink-faint); font-size: 0.82rem; }
+  .viewer {
+    border: 0;
+    padding: var(--s-2);
+    max-inline-size: min(94vw, 70rem);
+    background: var(--night);
+    color: var(--night-ink);
+  }
+  .viewer::backdrop { background: rgb(0 0 0 / 0.8); }
+  .viewer img { display: block; max-block-size: 80vh; margin-inline: auto; }
+  .viewer-caption { margin: var(--s-1) 0 0; font-size: 0.95rem; }
+  .close {
+    position: absolute;
+    inset-block-start: 0.4rem;
+    inset-inline-end: 0.6rem;
+    background: none;
+    color: inherit;
+    border: 0;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+  }
+</style>

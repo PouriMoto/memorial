@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { loc, type Lang } from '../lib/i18n';
+import { embedUrl } from '../lib/video';
+
+interface Props {
+  video: CollectionEntry<'videos'>;
+  lang?: Lang;
+}
+const { video, lang = 'fa' } = Astro.props;
+const d = video.data;
+const embed = embedUrl(d.provider, d.url);
+const providerName = d.provider === 'aparat' ? 'آپارات' : 'YouTube';
+---
+
+<figure class="video">
+  {
+    embed ? (
+      <div class="frame">
+        <iframe
+          src={embed}
+          title={loc(d.title, lang)}
+          loading="lazy"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+    ) : (
+      <p class="fallback">امکان نمایش درونی این ویدیو نیست.</p>
+    )
+  }
+  <figcaption>
+    <strong>{loc(d.title, lang)}</strong>
+    <span>{loc(d.description, lang)}</span>
+    <span class="meta">
+      ارائه‌دهنده: {providerName} ·
+      <a href={d.url} rel="noopener noreferrer">اگر ویدیو بارگذاری نشد، آن را در {providerName} ببینید</a>
+      {d.sourceUrl && (
+        <>
+          {' · '}
+          <a href={d.sourceUrl} rel="noopener noreferrer">منبع</a>
+        </>
+      )}
+    </span>
+  </figcaption>
+</figure>
+
+<style>
+  .video { margin: 0; }
+  .frame { position: relative; aspect-ratio: 16 / 9; background: var(--night); }
+  .frame iframe { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; border: 0; }
+  .fallback { background: var(--paper-2); padding: var(--s-3); margin: 0; }
+  figcaption { display: grid; gap: 0.2rem; padding-block-start: var(--s-1); font-size: 0.95rem; line-height: 1.7; }
+  .meta { color: var(--ink-faint); font-size: 0.85rem; }
+</style>

@@ -1,0 +1,59 @@
+---
+// Layout for the Persian memorial sub-pages (biography, timeline, gallery, ...).
+import BaseLayout from './BaseLayout.astro';
+import { loc } from '../lib/i18n';
+import type { MemorialData, SectionKey } from '../lib/memorial';
+import { href } from '../lib/url';
+
+interface Props {
+  data: MemorialData;
+  section: SectionKey | 'memory';
+  title: string;
+  description: string;
+  lead?: string;
+  wide?: boolean;
+  /** Overrides the default path (e.g. for a single memory page). */
+  path?: string;
+  /** Extra structured data (e.g. Article for a memory page). */
+  article?: { headline: string; author: string; datePublished?: string };
+}
+const { data, section, title, description, lead, wide = false, path, article } = Astro.props;
+const name = loc(data.memorial.data.name, 'fa');
+const pagePath = path ?? `${data.slug}/${section}`;
+const crumbs = [
+  { name: 'یادبود دیجیتال', path: '' },
+  { name, path: data.slug },
+  ...(section === 'memory' ? [{ name: 'خاطره‌ها', path: `${data.slug}/memories` }] : []),
+  { name: title, path: pagePath },
+];
+const ld = {
+  lang: 'fa' as const,
+  breadcrumb: crumbs,
+  ...(article ? { article: { ...article, about: name, path: pagePath } } : {}),
+};
+---
+
+<BaseLayout
+  title={`${title} | ${name}`}
+  description={description}
+  path={pagePath}
+  ld={ld}
+  slug={data.slug}
+  current={section === 'memory' ? 'memories' : section}
+  sample={data.memorial.data.sample}
+>
+  <div class="wrap page-head">
+    <p class="eyebrow"><a href={href(data.slug)}>{name}</a></p>
+    <h1>{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+  </div>
+  <div class={wide ? 'wrap' : 'wrap--text'}>
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-head { padding-block: var(--s-5) var(--s-3); max-inline-size: var(--w-text); margin-inline-start: auto; margin-inline-end: auto; }
+  .eyebrow a { text-decoration: none; }
+  .lead { font-size: var(--fs-1); color: var(--ink-soft); }
+</style>

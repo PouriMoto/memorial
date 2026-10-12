@@ -1,0 +1,60 @@
+---
+// One consistent set of line icons (24x24, stroke = currentColor), drawn inline so they look the
+// same on every phone. The gear is from Feather Icons (MIT); the others are simple original shapes.
+// `pathLength="1"` lets any icon be "drawn in" by animating stroke-dashoffset.
+interface Props {
+  name: string;
+  size?: number;
+  class?: string;
+  draw?: boolean;
+}
+const { name, size = 24, class: cls, draw = false } = Astro.props;
+
+const P: Record<string, string[]> = {
+  home: ['M3 11l9-8 9 8', 'M5 10v10h5v-6h4v6h5V10'],
+  story: ['M3 11l9-8 9 8', 'M5 10v10h5v-6h4v6h5V10'],
+  timeline: ['M6 3v18', 'M11 6h9', 'M11 12h7', 'M11 18h9', 'M4 6h4', 'M4 12h4', 'M4 18h4'],
+  memories: ['M4 5h16v11H9l-5 4z', 'M8 9h8', 'M8 12h5'],
+  keepsakes: ['M3 6h18v12H3z', 'M3 7l9 6 9-6'],
+  biography: ['M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z', 'M5 17a3 3 0 013-3h11'],
+  gallery: ['M3 5h18v14H3z', 'M3 16l5-5 4 4 3-3 6 6', 'M16 9.5h.01'],
+  videos: ['M3 6h13v12H3z', 'M16 10l5-3v10l-5-3'],
+  sources: ['M7 3h8l4 4v14H7z', 'M15 3v4h4', 'M10 12h6', 'M10 16h6'],
+  about: ['M12 3a9 9 0 100 18 9 9 0 000-18z', 'M12 11v6', 'M12 7.5v.01'],
+  order: ['M5 8h14l-1 12H6z', 'M9 8a3 3 0 016 0'],
+  submit: ['M4 20l1-4L16 5l3 3L8 19z', 'M14 7l3 3'],
+  more: ['M5 8h14', 'M5 12h14', 'M5 16h14'],
+  chevron: ['M6 9l6 6 6-6'],
+  arrow: ['M5 12h14', 'M13 6l6 6-6 6'],
+  hand: ['M9 11V5a1.5 1.5 0 013 0v5', 'M12 10V4.5a1.5 1.5 0 013 0V11', 'M15 11V6.5a1.5 1.5 0 013 0V15a6 6 0 01-6 6h-1a6 6 0 01-5-2.7L4 14a1.5 1.5 0 012.3-1.8L9 14'],
+  gear: [
+    'M12 15a3 3 0 100-6 3 3 0 000 6z',
+    'M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z',
+  ],
+};
+const paths = P[name] ?? P.more;
+---
+
+<svg
+  class:list={['icon', cls, { draw }]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {paths.map((d, i) => <path d={d} pathLength="1" style={`--n:${i}`} />)}
+</svg>
+
+<style is:global>
+  .icon { flex: none; }
+  /* Drawn-in icons: strokes trace themselves when their card / section is revealed. */
+  .js .icon.draw path { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 0.9s ease calc(var(--n) * 120ms + 150ms); }
+  .js .in .icon.draw path, .js .icon.draw.in path { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) { .js .icon.draw path { stroke-dashoffset: 0; transition: none; } }
+</style>

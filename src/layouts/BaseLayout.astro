@@ -1,0 +1,112 @@
+---
+import '../styles/global.css';
+import '../styles/typography.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { href, asset } from '../lib/url';
+import { t, type Lang } from '../lib/i18n';
+import { PLACEHOLDER_HOST, settings } from '../lib/site';
+import { buildLd, type LdSpec } from '../lib/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: Lang;
+  /** Path of this page without the base, e.g. "ali-khamenei/timeline". "" is the home page. */
+  path: string;
+  /** Path (without base) of the canonical page when this one is a duplicate. */
+  canonicalPath?: string;
+  /** Absolute or site-relative image for social previews. Omitted when none exists. */
+  ogImage?: string;
+  /** Other-language versions: { fa: 'path', en: 'path' } (paths without base). */
+  alternates?: Partial<Record<Lang, string>>;
+  slug?: string;
+  switchHref?: string;
+  current?: string;
+  noindex?: boolean;
+  /** Show the "fictional sample" notice. */
+  sample?: boolean;
+  /** Structured data for search engines / answer engines (emitted only with a real production URL). */
+  ld?: LdSpec;
+}
+const { title, description, lang = 'fa', path, canonicalPath, ogImage, alternates, slug, switchHref, current, noindex, sample, ld } = Astro.props;
+
+// Canonical/OG URLs are only emitted once a real production URL is configured.
+const configured = Boolean(Astro.site && !Astro.site.host.toLowerCase().includes(PLACEHOLDER_HOST));
+const abs = (p: string) => new URL(href(p), Astro.site).href;
+const canonical = configured ? abs(canonicalPath ?? path) : undefined;
+const ldJson = ld && configured ? buildLd(ld, abs, canonicalPath ?? path, title) : [];
+const analytics = settings.analytics;
+const imageUrl = ogImage && configured ? new URL(asset(ogImage), Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang={lang} dir={lang === 'fa' ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    {
+      configured &&
+        alternates &&
+        Object.entries(alternates).map(([l, p]) => <link rel="alternate" hreflang={l} href={abs(p as string)} />)
+    }
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content={lang === 'fa' ? 'fa_IR' : 'en_US'} />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {imageUrl && <meta property="og:image" content={imageUrl} />}
+    <meta name="twitter:card" content={imageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="generator" content={Astro.generator} />
+    {ldJson.map((o) => <script type="application/ld+json" set:html={JSON.stringify(o).replace(/</g, '\\u003c')} />)}
+    {analytics.enabled && analytics.scriptUrl && <script defer src={analytics.scriptUrl} data-website-id={analytics.websiteId || undefined} data-domain={analytics.domain || undefined}></script>}
+    <script is:inline>
+      // Runs before first paint: marks JS as available and applies the visitor's saved theme / text size.
+      (function () {
+        var r = document.documentElement;
+        r.classList.add('js');
+        try {
+          var th = localStorage.getItem('memorial-theme');
+          if (th === 'light' || th === 'dark') r.setAttribute('data-theme', th);
+          var fs = localStorage.getItem('memorial-fs');
+          if (fs === 'sm' || fs === 'lg') r.setAttribute('data-fs', fs);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t(lang, 'skip')}</a>
+    {sample && <aside class="sample-banner" aria-label={t(lang, 'sampleLabel')}>{t(lang, 'sampleNotice')}</aside>}
+    <SiteHeader lang={lang} slug={slug} switchHref={switchHref} current={current} />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter lang={lang} slug={slug} />
+    <script>
+      // Gentle reveal for every element marked .reveal. Content is visible without JS
+      // (the hidden state only applies under html.js) and with reduced motion.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll<HTMLElement>('.reveal');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) =>
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+              }
+            }),
+          { rootMargin: '0px 0px -8% 0px' },
+        );
+        items.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

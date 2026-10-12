@@ -1,0 +1,21 @@
+/* Long-form reading typography (biography, story chapters, memories). */
+.prose {
+  font-size: var(--fs-1);
+  line-height: 2.1;
+  color: var(--ink);
+}
+html[lang='en'] .prose { line-height: 1.8; }
+
+.prose > * + * { margin-block-start: var(--s-2); }
+.prose h2 { margin-block: var(--s-4) var(--s-1); padding-block-start: var(--s-2); border-block-start: var(--border); }
+.prose h3 { margin-block-start: var(--s-3); }
+.prose ul, .prose ol { padding-inline-start: 1.4em; }
+.prose blockquote {
+  margin-inline: 0;
+  padding-inline-start: var(--s-2);
+  border-inline-start: 3px solid var(--accent);
+  color: var(--ink-soft);
+}
+.prose figure { margin-inline: 0; }
+.prose figcaption { font-size: 0.9rem; color: var(--ink-faint); }
+.prose a { text-decoration-color: var(--accent); }

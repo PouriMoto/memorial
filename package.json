@@ -1,0 +1,29 @@
+{
+  "name": "memorial",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "validate": "node scripts/validate-content.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "memories": "node scripts/import-memories.mjs",
+    "slots": "node scripts/make-image-guide.mjs",
+    "test": "npm run validate && npm run check && npm run build && npm run check:links"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/vazirmatn": "^5.3.0",
+    "astro": "^7.3.8",
+    "qrcode": "^1.5.4",
+    "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.6",
+    "yaml": "^2.9.1"
+  }
+}

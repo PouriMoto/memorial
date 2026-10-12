@@ -1,0 +1,26 @@
+{
+  "name": { "fa": "سید علی خامنه‌ای", "en": "Seyyed Ali Khamenei" },
+  "nameLatin": "Ali Khamenei",
+  "tagline": {
+    "fa": "یادبود دیجیتال؛ زندگی، راه و خاطره‌ها",
+    "en": "A digital memorial: a life, a path, and the memories"
+  },
+  "summary": {
+    "fa": "علی خامنه‌ای (۱۹۳۹–۲۰۲۶) روحانی و سیاستمدار ایرانی بود؛ سومین رئیس‌جمهور ایران (۱۹۸۱–۱۹۸۹) و دومین رهبر جمهوری اسلامی (۱۹۸۹–۲۰۲۶). این روایت از مشهد تا قم، و از سال‌های مبارزه تا ریاست‌جمهوری و رهبری را بر پایهٔ منابع ثبت‌شده دنبال می‌کند.",
+    "en": "Ali Khamenei (1939–2026) was an Iranian cleric and politician: the third President of Iran (1981–1989) and the second Supreme Leader of the Islamic Republic (1989–2026). This story follows his path from Mashhad to Qom, from the years of struggle to the presidency and leadership, based on recorded sources."
+  },
+  "birth": { "date": "1939-04-19", "precision": "exact", "place": { "fa": "مشهد", "en": "Mashhad" } },
+  "death": { "date": "2026-02-28", "precision": "exact", "place": { "fa": "تهران", "en": "Tehran" } },
+  "sourceIds": ["wikipedia-en-khamenei", "npr-2026-02-28"],
+  "featured": false,
+  "calendar": "gregory",
+  "enabledSections": {
+    "biography": true,
+    "timeline": true,
+    "gallery": true,
+    "videos": true,
+    "memories": true,
+    "keepsakes": true,
+    "sources": true
+  }
+}

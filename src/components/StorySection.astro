@@ -1,0 +1,77 @@
+---
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { loc, type Lang } from '../lib/i18n';
+import { asset, href } from '../lib/url';
+import type { MemorialData } from '../lib/memorial';
+import Collage from './Collage.astro';
+
+interface Props {
+  chapter: CollectionEntry<'story'>;
+  data: MemorialData;
+  lang?: Lang;
+  /** Position of the chapter in the story, 0 (first) to 1 (last): shifts the background tone slowly. */
+  era?: number;
+}
+const { chapter, data, lang = 'fa', era = 0 } = Astro.props;
+const { Content } = await render(chapter);
+const stem = chapter.id.split('/').pop()!;
+const ids = [...(chapter.data.imageId ? [chapter.data.imageId] : []), ...chapter.data.imageIds];
+const photos = ids.map((id) => data.galleryById.get(id)).filter((g): g is NonNullable<typeof g> => Boolean(g));
+const single = photos.length === 1 ? photos[0] : undefined;
+const many = photos.length > 1 ? photos : [];
+const num = new Intl.NumberFormat(lang === 'fa' ? 'fa-IR' : 'en-GB').format(chapter.data.order);
+---
+
+<section class="chapter reveal" id={`ch-${stem}`} aria-labelledby={`h-${stem}`} style={`--era:${era.toFixed(2)}`}>
+  <div class="wrap grid">
+    <div class="rail">
+      <span class="num" aria-hidden="true">{num}</span>
+      {chapter.data.kicker && <p class="eyebrow">{chapter.data.kicker}</p>}
+      {chapter.data.dateLabel && <p class="date">{chapter.data.dateLabel}</p>}
+    </div>
+    <div class="body">
+      <h2 id={`h-${stem}`}>{chapter.data.title}</h2>
+      {
+        single && (
+          <figure class="sticky-photo">
+            <img src={asset(single.data.src)} alt={loc(single.data.alt, lang)} loading="lazy" decoding="async" width={single.data.width} height={single.data.height} />
+            <figcaption>{loc(single.data.caption, lang)}</figcaption>
+          </figure>
+        )
+      }
+      <div class="prose"><Content /></div>
+      {many.length > 0 && <div class="chapter-collage"><Collage items={many} lang={lang} to={href(`${data.slug}/gallery`)} hint={false} /></div>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .chapter {
+    padding-block: var(--s-5);
+    border-block-start: var(--border);
+    /* Later chapters are a touch warmer, so the scroll itself feels like time passing. */
+    background: color-mix(in srgb, var(--paper), var(--accent) calc(var(--era) * 7%));
+  }
+  .grid { display: grid; gap: var(--s-3); }
+  @media (min-width: 60em) {
+    .grid { grid-template-columns: 14rem minmax(0, var(--w-text)); justify-content: center; gap: var(--s-5); }
+    .rail { position: sticky; inset-block-start: 5rem; align-self: start; }
+  }
+  .num {
+    display: block; font-size: clamp(3.5rem, 8vw, 6rem); font-weight: 900; line-height: 1; color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent); margin-block-end: var(--s-1);
+  }
+  .date { font-weight: 700; color: var(--ink-soft); margin: 0; }
+  figure { margin: 0 0 var(--s-3); }
+  figure img { display: block; inline-size: 100%; block-size: auto; border-radius: var(--radius); }
+  figcaption { font-size: 0.88rem; color: var(--ink-faint); }
+  h2 { font-size: var(--fs-3); }
+  .chapter-collage { margin-block-start: var(--s-3); }
+  /* Phones: the chapter's photo stays pinned under the top bar while its text scrolls beneath. */
+  @media (max-width: 59.99em) {
+    .sticky-photo { position: sticky; inset-block-start: var(--hdr, 3.25rem); transition: inset-block-start 0.3s cubic-bezier(0.2, 0.7, 0.2, 1); z-index: 2; background: var(--paper); padding-block: 0.4rem; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
+    .sticky-photo img { max-block-size: 34svh; object-fit: cover; }
+    .sticky-photo figcaption { display: none; }
+  }
+</style>

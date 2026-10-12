@@ -1,0 +1,94 @@
+---
+import { t, loc, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+import { getNav } from '../lib/nav';
+import { author, features, activeContacts, activeSocial } from '../lib/site';
+
+interface Props {
+  lang?: Lang;
+  slug?: string;
+}
+const { lang = 'fa', slug } = Astro.props;
+
+const nav = await getNav(slug, lang);
+const m = nav.data?.memorial.data;
+const links = [...nav.sections];
+const studioLinks = [...activeContacts, ...activeSocial];
+---
+
+<footer class="site-footer">
+  <div class="wrap top">
+    <div class="who">
+      {m && <p class="name">{loc(m.name, lang)}</p>}
+      {m && <p class="tag">{loc(m.tagline, lang)}</p>}
+      {
+        nav.submit && (
+          <div class="invite">
+            <p>{t(lang, 'footerInvite')}</p>
+            <a class="btn" href={nav.submit.href} hreflang={lang === 'en' ? 'fa' : undefined}>{t(lang, 'submitMemory')}</a>
+          </div>
+        )
+      }
+    </div>
+
+    {
+      links.length > 0 && (
+        <nav aria-label={t(lang, 'footerSections')}>
+          <p class="label">{t(lang, 'footerSections')}</p>
+          <ul>
+            <li><a href={lang === 'en' ? href('en') : href('/')}>{t(lang, 'home')}</a></li>
+            {links.map((l) => (
+              <li>
+                <a href={l.href} hreflang={l.fa ? 'fa' : undefined}>{l.label}</a>
+                {l.fa && <span class="fa-badge" lang="en">{t(lang, 'faBadge')}</span>}
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
+  </div>
+
+  {
+    features.studio && (
+      <div class="wrap studio">
+        <p class="label">{t(lang, 'studioTitle')}</p>
+        <p class="intro">{loc(author.introduction, lang)}</p>
+        <p class="studio-links">
+          <a class="link-arrow" href={href('order')} hreflang={lang === 'en' ? 'fa' : undefined}>{t(lang, 'order')}</a>
+          {studioLinks.map((l) => <a href={l.url} rel="noopener noreferrer">{l.label}</a>)}
+        </p>
+      </div>
+    )
+  }
+
+  <div class="wrap bottom">
+    {features.studio && <p class="credit">{t(lang, 'creditLabel')} {loc(author.displayName, lang)}{author.handle && <> · <bdi>{author.handle}</bdi></>}</p>}
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--night);
+    color: var(--night-ink);
+    padding-block: var(--s-5) var(--s-3);
+    margin-block-start: var(--s-6);
+  }
+  .top { display: grid; gap: var(--s-4); padding-block-end: var(--s-4); }
+  @media (min-width: 40em) { .top { grid-template-columns: 1.6fr 1fr; } }
+  .name { font-size: var(--fs-2); font-weight: 800; margin: 0 0 0.25rem; }
+  .tag { color: var(--night-soft); margin-block-end: var(--s-3); max-inline-size: 28rem; }
+  .invite { border-inline-start: 2px solid var(--accent); padding-inline-start: var(--s-2); max-inline-size: 28rem; }
+  .invite p { margin-block-end: var(--s-1); }
+  .label { font-size: 0.85rem; color: var(--night-soft); margin-block-end: var(--s-1); }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
+  a { color: var(--night-ink); text-decoration-color: var(--night-soft); }
+  .btn { color: var(--night-ink); }
+  .btn:hover { background: rgb(255 255 255 / 0.1); }
+  .fa-badge { font-size: 0.7rem; border: 1px solid #4a423a; border-radius: var(--radius-pill); padding: 0 0.45em; margin-inline-start: 0.5em; color: var(--night-soft); }
+  .studio { border-block-start: 1px solid #3a342d; padding-block: var(--s-3); }
+  .intro { color: var(--night-soft); max-inline-size: 38rem; margin-block-end: var(--s-1); font-size: 0.95rem; }
+  .studio-links { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-3); margin: 0; font-size: 0.95rem; }
+  .bottom { padding-block-start: var(--s-1); }
+  .credit { margin: 0; font-size: 0.8rem; color: var(--night-soft); opacity: 0.8; font-weight: 400; }
+</style>

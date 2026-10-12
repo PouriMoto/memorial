@@ -1,0 +1,256 @@
+---
+import { t, type Lang } from '../lib/i18n';
+import { href } from '../lib/url';
+import { getNav } from '../lib/nav';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang?: Lang;
+  /** Memorial whose sections appear in the nav. Defaults to the featured one. */
+  slug?: string;
+  /** Link to the same page in the other language. Defaults to the English story page. */
+  switchHref?: string;
+  current?: string;
+}
+const { lang = 'fa', slug, switchHref, current = '' } = Astro.props;
+
+const nav = await getNav(slug, lang);
+const homeHref = lang === 'en' ? href('en') : href('/');
+const brand = nav.data ? (lang === 'en' ? nav.data.memorial.data.name.en ?? nav.data.memorial.data.name.fa : nav.data.memorial.data.name.fa) : lang === 'en' ? 'Digital Memorial' : 'یادبود دیجیتال';
+const other: Lang = lang === 'fa' ? 'en' : 'fa';
+// Persian pages without an English twin point to the English story page of the same memorial.
+const langHref = switchHref ?? (lang === 'fa' && nav.slug ? href(`en/${nav.slug}`) : lang === 'en' ? href('/') : undefined);
+const iconFor = (k: string) => (k === 'home' ? 'story' : k);
+const restActive = nav.rest.some((x) => x.key === current);
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={homeHref}>{brand}</a>
+
+    {
+      langHref && (
+        <a class="lang" href={langHref} lang={other} hreflang={other} aria-label={t(lang, 'switchLangLabel')} dir="ltr">
+          <span class:list={{ on: lang === 'fa' }} lang="fa">{t(lang, 'langFa')}</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span class:list={{ on: lang === 'en' }} lang="en">{t(lang, 'langEn')}</span>
+        </a>
+      )
+    }
+
+    <details class="prefs js-only">
+      <summary aria-label={t(lang, 'appearance')}><Icon name="gear" size={22} /></summary>
+      <div class="panel">
+        <fieldset>
+          <legend>{t(lang, 'theme')}</legend>
+          <button type="button" class="chip" data-theme-choice="auto" aria-pressed="true">{t(lang, 'themeAuto')}</button>
+          <button type="button" class="chip" data-theme-choice="light" aria-pressed="false">{t(lang, 'themeLight')}</button>
+          <button type="button" class="chip" data-theme-choice="dark" aria-pressed="false">{t(lang, 'themeDark')}</button>
+        </fieldset>
+        <fieldset>
+          <legend>{t(lang, 'textSize')}</legend>
+          <button type="button" class="chip" data-fs-choice="sm" aria-pressed="false">{t(lang, 'sizeSm')}</button>
+          <button type="button" class="chip" data-fs-choice="md" aria-pressed="true">{t(lang, 'sizeMd')}</button>
+          <button type="button" class="chip" data-fs-choice="lg" aria-pressed="false">{t(lang, 'sizeLg')}</button>
+        </fieldset>
+      </div>
+    </details>
+
+    <!-- Phones: fixed bottom tab bar (thumb zone). Wide screens: inline in the header. -->
+    <nav class="tabs" aria-label={t(lang, 'menu')}>
+      <ul>
+        {
+          nav.primary.map((l) => (
+            <li>
+              <a href={l.href} aria-current={current === l.key ? 'page' : undefined} hreflang={l.fa ? 'fa' : undefined}>
+                <Icon name={iconFor(l.key)} size={24} />
+                <span>{l.label}</span>
+              </a>
+            </li>
+          ))
+        }
+        {
+          nav.rest.length > 0 && (
+            <li class="more-item">
+              <details class="more">
+                <summary class:list={{ active: restActive }} aria-label={t(lang, 'more')}>
+                  <Icon name="more" size={24} />
+                  <span>{t(lang, 'more')}</span>
+                </summary>
+                <ul class="sheet">
+                  {nav.rest.map((l) => (
+                    <li>
+                      <a href={l.href} aria-current={current === l.key ? 'page' : undefined} hreflang={l.fa ? 'fa' : undefined}>
+                        <Icon name={iconFor(l.key)} size={22} />
+                        <span>{l.label}</span>
+                        {l.fa && <span class="fa-badge" lang="en">{t(lang, 'faBadge')}</span>}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          )
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Close the "More" sheet on outside tap, Escape or after choosing a link.
+  const more = document.querySelector<HTMLDetailsElement>('details.more');
+  if (more) {
+    document.addEventListener('click', (e) => { if (more.open && !more.contains(e.target as Node)) more.open = false; });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') more.open = false; });
+  }
+  const prefs = document.querySelector<HTMLDetailsElement>('details.prefs');
+  if (prefs) {
+    document.addEventListener('click', (e) => { if (prefs.open && !prefs.contains(e.target as Node)) prefs.open = false; });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') prefs.open = false; });
+  }
+
+  // Hide the top bar while reading downwards, bring it back on the slightest upward scroll.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (header && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let last = window.scrollY;
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const hide = y > last + 6 && y > 120;
+        const show = y < last - 6 || y < 80;
+        if (hide) { header.classList.add('hide'); document.documentElement.style.setProperty('--hdr', '0rem'); }
+        else if (show) { header.classList.remove('hide'); document.documentElement.style.removeProperty('--hdr'); }
+        last = y;
+        ticking = false;
+      });
+    }, { passive: true });
+  }
+
+  // Appearance preferences (theme, text size), remembered in this browser only.
+  const root = document.documentElement;
+  const store = {
+    get: (k: string) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* ignore */ } },
+  };
+  const mark = (attr: string, value: string) =>
+    document.querySelectorAll<HTMLElement>(`[${attr}]`).forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute(attr) === value)));
+  const theme = store.get('memorial-theme');
+  mark('data-theme-choice', theme === 'light' || theme === 'dark' ? theme : 'auto');
+  const fs = store.get('memorial-fs');
+  mark('data-fs-choice', fs === 'sm' || fs === 'lg' ? fs : 'md');
+
+  document.querySelectorAll<HTMLElement>('[data-theme-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const v = b.getAttribute('data-theme-choice')!;
+      if (v === 'auto') { root.removeAttribute('data-theme'); store.set('memorial-theme', 'auto'); }
+      else { root.setAttribute('data-theme', v); store.set('memorial-theme', v); }
+      mark('data-theme-choice', v);
+    }),
+  );
+  document.querySelectorAll<HTMLElement>('[data-fs-choice]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const v = b.getAttribute('data-fs-choice')!;
+      if (v === 'md') root.removeAttribute('data-fs'); else root.setAttribute('data-fs', v);
+      store.set('memorial-fs', v);
+      mark('data-fs-choice', v);
+    }),
+  );
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 50;
+    background: var(--paper);
+    border-block-end: var(--border);
+    /* Slides away by moving its sticky offset (a transform would trap the fixed tab bar inside it). */
+    transition: inset-block-start 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .site-header.hide { inset-block-start: -3.4rem; }
+  .bar { display: flex; align-items: center; gap: var(--s-1); min-block-size: 3.25rem; }
+  .brand { font-weight: 800; text-decoration: none; font-size: 1rem; margin-inline-end: auto; }
+
+  /* Language: one small chip, "فا / EN", the current language highlighted. */
+  .lang {
+    display: inline-flex; align-items: center; gap: 0.3rem; min-block-size: 40px; padding: 0 0.85rem;
+    border: var(--border); border-radius: var(--radius-pill); text-decoration: none; font-size: 0.9rem; font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .lang .on { color: var(--ink); font-weight: 800; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.3em; text-decoration-thickness: 2px; }
+  .lang .sep { color: var(--rule); }
+  .lang:hover { background: var(--paper-2); }
+
+  .prefs { position: relative; }
+  .prefs summary {
+    list-style: none; cursor: pointer; inline-size: 40px; block-size: 40px; border-radius: 50%;
+    display: grid; place-items: center; border: var(--border);
+  }
+  .prefs summary::-webkit-details-marker { display: none; }
+  .prefs summary:hover { background: var(--paper-2); }
+  .prefs[open] summary { background: var(--paper-2); }
+  .prefs[open] summary :global(.icon) { transform: rotate(60deg); }
+  .prefs summary :global(.icon) { transition: transform 0.4s ease; }
+  .prefs .panel {
+    position: absolute; inset-inline-end: 0; inset-block-start: calc(100% + 0.5rem); inline-size: 17rem;
+    background: var(--paper); border: var(--border); border-radius: var(--radius); padding: var(--s-2); display: grid; gap: var(--s-2); z-index: 5;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+  }
+  fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  legend { font-size: 0.85rem; color: var(--ink-faint); padding: 0; margin-block-end: 0.3rem; }
+
+  /* ---- Tabs: phone = bottom bar ---- */
+  .tabs {
+    position: fixed; inset-inline: 0; inset-block-end: 0; z-index: 55;
+    background: var(--paper); border-block-start: var(--border);
+    padding-block-end: env(safe-area-inset-bottom);
+  }
+  .tabs > ul { list-style: none; margin: 0; padding: 0; display: flex; }
+  .tabs > ul > li { flex: 1 1 0; min-inline-size: 0; }
+  .tabs a, .more > summary {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
+    min-block-size: 3.6rem; padding-block: 0.35rem; text-decoration: none; font-size: 0.74rem; font-weight: 600;
+    color: var(--ink-soft); cursor: pointer; list-style: none; position: relative; -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, color 0.2s ease;
+  }
+  .more > summary::-webkit-details-marker { display: none; }
+  .tabs a:active, .more > summary:active { transform: scale(0.94); }
+  .tabs a[aria-current='page'], .more > summary.active { color: var(--accent); }
+  .tabs a[aria-current='page']::before, .more > summary.active::before {
+    content: ''; position: absolute; inset-block-start: 0; inline-size: 1.6rem; block-size: 3px; border-radius: 0 0 3px 3px; background: var(--accent);
+  }
+  .more { position: static; }
+  .sheet {
+    list-style: none; margin: 0; padding: var(--s-1); position: absolute; inset-inline: var(--s-1); inset-block-end: calc(100% + 0.5rem);
+    background: var(--paper); border: var(--border); border-radius: var(--radius); box-shadow: 0 -8px 30px rgb(0 0 0 / 0.14);
+    animation: sheet-in 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @keyframes sheet-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  .sheet a { flex-direction: row; justify-content: flex-start; gap: var(--s-2); font-size: 1rem; padding: 0.7rem var(--s-2); min-block-size: 3rem; border-radius: 0.8rem; }
+  .sheet a:hover { background: var(--paper-2); }
+  .fa-badge { font-size: 0.7rem; border: 1px solid var(--rule); border-radius: var(--radius-pill); padding: 0 0.45em; color: var(--ink-faint); }
+  @media (prefers-reduced-motion: reduce) { .site-header, .tabs a, .sheet { transition: none; animation: none; } }
+
+  /* ---- Wide screens: tabs inline in the top bar ---- */
+  @media (min-width: 60em) {
+    .site-header.hide { inset-block-start: 0; }
+    .bar { gap: var(--s-2); }
+    .brand { margin-inline-end: 0; }
+    .tabs { position: static; order: 2; flex: 1; border: 0; padding: 0; background: none; }
+    .tabs > ul { justify-content: flex-start; gap: 0.2rem; }
+    .tabs > ul > li { flex: none; }
+    .tabs a, .more > summary { flex-direction: row; gap: 0.45rem; min-block-size: 2.5rem; padding: 0 0.8rem; border-radius: var(--radius-pill); font-size: 0.93rem; }
+    .tabs a:hover, .more > summary:hover { background: var(--paper-2); }
+    .tabs a[aria-current='page']::before, .more > summary.active::before { display: none; }
+    .tabs a[aria-current='page'], .more > summary.active { background: var(--paper-2); }
+    .more { position: relative; }
+    .sheet { inset-inline: auto; inset-inline-start: 0; inset-block-end: auto; inset-block-start: calc(100% + 0.5rem); inline-size: 14rem; box-shadow: 0 10px 30px rgb(0 0 0 / 0.12); }
+    .lang { order: 3; }
+    .prefs { order: 4; }
+    .brand { order: 1; }
+  }
+</style>

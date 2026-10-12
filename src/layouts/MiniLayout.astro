@@ -1,0 +1,56 @@
+---
+// Minimal standalone layout for the grave-side page and the printable QR page.
+// No site header/footer, no webfont, no framework JS: it has to open fast on a weak connection.
+import { asset } from '../lib/url';
+import { settings } from '../lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'fa' | 'en';
+  sample?: boolean;
+  /** Page path without base, used for the optional visit-counter beacon. */
+  path?: string;
+}
+const { title, description, lang = 'fa', sample, path } = Astro.props;
+const a = settings.analytics;
+const pixel = a.enabled && a.pixelUrl && path ? a.pixelUrl.replace('{path}', encodeURIComponent(`/${path}/`)) : '';
+---
+
+<!doctype html>
+<html lang={lang} dir={lang === 'fa' ? 'rtl' : 'ltr'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="robots" content="noindex" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+  </head>
+  <body>
+    {sample && <aside class="sample" aria-label="اطلاعیه">نمونهٔ ساختگی</aside>}
+    <slot />
+    {pixel && <img src={pixel} alt="" width="1" height="1" style="position:absolute;opacity:0" />}
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #f6f2ea; --ink: #1d1a16; --soft: #5d564b; --accent: #8a5a1c; --rule: #d6ccb9;
+    font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #151210; --ink: #f1ece2; --soft: #b7ad9c; --accent: #e0b36a; --rule: #3a342c; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.8; min-block-size: 100svh; }
+  .sample { margin: 0; padding: 0.4rem 1rem; text-align: center; font-size: 0.85rem; background: var(--rule); color: var(--ink); }
+  a { color: inherit; }
+  .btn {
+    display: block; text-align: center; padding: 0.85rem 1.4rem; border-radius: 999px; text-decoration: none;
+    border: 1px solid var(--ink); font-weight: 700; min-block-size: 3rem;
+  }
+  .btn.solid { background: var(--ink); color: var(--bg); }
+  .btn:focus-visible, audio:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+</style>

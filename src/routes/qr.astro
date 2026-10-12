@@ -1,0 +1,80 @@
+---
+// Printable QR code for the grave-side page. The QR is generated at build time as inline SVG.
+import QRCode from 'qrcode';
+import MiniLayout from '../layouts/MiniLayout.astro';
+import { loadMemorial, getMemorials } from '../lib/memorial';
+import { loc } from '../lib/i18n';
+import { href } from '../lib/url';
+import { features, PLACEHOLDER_HOST } from '../lib/site';
+
+export async function getStaticPaths() {
+  return (await getMemorials()).map((m) => ({ params: { slug: m.id } }));
+}
+const { slug } = Astro.params;
+const data = await loadMemorial(slug!);
+const m = data.memorial.data;
+const target = features.grave ? `g/${slug}` : `${slug}`;
+const base = new URL(href(target), Astro.site).href;
+// ?s=q marks scans of the printed QR in visit statistics (NFC tags use ?s=n).
+const url = `${base}?s=q`;
+const placeholder = !Astro.site || Astro.site.host.toLowerCase().includes(PLACEHOLDER_HOST);
+// margin: 4 modules = the quiet zone the QR standard asks for.
+const svg = await QRCode.toString(url, { type: 'svg', margin: 4, errorCorrectionLevel: 'M', color: { dark: '#000000', light: '#ffffff' } });
+const sizes = [['۳ سانتی‌متر', 3], ['۵ سانتی‌متر', 5], ['۸ سانتی‌متر', 8]] as const;
+---
+
+<MiniLayout title={`QR ${loc(m.name, 'fa')}`} description="کد QR چاپی برای صفحهٔ مزار" sample={m.sample}>
+  <main>
+    <header class="noprint">
+      <h1>کد QR: {loc(m.name, 'fa')}</h1>
+      <p>این کد به نشانی زیر می‌رود. پیش از چاپ یا حکاکی، نشانی را روی دو گوشی مختلف آزمایش کنید.</p>
+      <p class="url"><bdi dir="ltr">{url}</bdi></p>
+      {
+        placeholder && (
+          <p class="warn" role="alert">
+            <strong>هشدار:</strong> نشانی واقعی سایت هنوز تنظیم نشده است و این QR فقط برای آزمایش است. پیش از چاپ، دامنه را مطابق <code>docs/custom-domain.md</code> تنظیم و دوباره بیلد کنید.
+          </p>
+        )
+      }
+      <p><button class="btn solid" onclick="window.print()">چاپ</button></p>
+    </header>
+
+    <section class="sheet">
+      {
+        sizes.map(([label, cm]) => (
+          <figure>
+            <div class="qr" style={`inline-size:${cm}cm;block-size:${cm}cm`} set:html={svg} />
+            <figcaption class="noprint">{label}</figcaption>
+          </figure>
+        ))
+      }
+    </section>
+
+    <section class="noprint guide">
+      <h2>نکته‌های چاپ</h2>
+      <ul>
+        <li>حداقل اندازهٔ پیشنهادی ۳ سانتی‌متر؛ برای حکاکی روی سنگ ۵ تا ۸ سانتی‌متر.</li>
+        <li>حاشیهٔ سفید دور کد (چهار خانه) را نبُرید.</li>
+        <li>تیره روی روشن بماند؛ معکوس‌کردن رنگ‌ها روی بعضی گوشی‌ها خوانده نمی‌شود.</li>
+        <li>برای NFC راهنمای <code>docs/qr-nfc-guide.md</code> را ببینید.</li>
+      </ul>
+    </section>
+  </main>
+</MiniLayout>
+
+<style>
+  main { max-inline-size: 44rem; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+  .url { font-family: monospace; word-break: break-all; padding: 0.6rem 0.9rem; border: 1px solid var(--rule); border-radius: 0.75rem; }
+  .warn { padding: 0.75rem 1rem; border: 1px solid #b3261e; border-radius: 0.75rem; }
+  .sheet { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-end; margin-block: 1.5rem; }
+  figure { margin: 0; text-align: center; }
+  .qr { background: #fff; }
+  .qr :global(svg) { display: block; inline-size: 100%; block-size: 100%; }
+  figcaption { color: var(--soft); font-size: 0.9rem; }
+  button.btn { display: inline-block; cursor: pointer; font: inherit; }
+  @media print {
+    .noprint { display: none !important; }
+    body { background: #fff; }
+    main { padding: 0; }
+  }
+</style>
