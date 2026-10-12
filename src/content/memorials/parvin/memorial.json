@@ -5,7 +5,7 @@
   },
   "nameLatin": "Parvin Aryanfar",
   "tagline": {
-    "fa": "معلمی که کتاب را به دست بچه‌های محله رساند.",
+    "fa": "معلمی دلسوز و سرشار قریحه ادبی و همیشه به یاد دوستانش.",
     "en": "The teacher who put books into the hands of the neighbourhood's children."
   },
   "summary": {
@@ -24,11 +24,12 @@
     "date": "2023-11-05",
     "precision": "exact",
     "place": {
-      "fa": "شیراز",
+      "fa": "پاریس",
       "en": "Shiraz"
     }
   },
   "sourceIds": [],
+  "heroImageId": "hero",
   "featured": true,
   "sample": true,
   "calendar": "persian",

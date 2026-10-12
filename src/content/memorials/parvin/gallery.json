@@ -1,17 +1,20 @@
-[{
+[
+  {
   "id": "hero",
+  "memorial": "parvin",
   "src": "/images/parvin/hero-portrait.webp",
   "width": 1200,
   "height": 1600,
   "title": {
-    "fa": ""
+    "fa": "پرتره پروین"
   },
   "caption": {
-    "fa": ""
+    "fa": "تصویر دوره جوانی پروین"
   },
   "alt": {
-    "fa": ""
+    "fa": "پرتره پروین آریان فر"
   },
   "license": "permission-granted",
   "status": "needs-verification"
-}]
+  }
+]
