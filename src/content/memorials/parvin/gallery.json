@@ -1,1 +1,17 @@
-[]
+[{
+  "id": "hero",
+  "src": "/images/parvin/hero-portrait.webp",
+  "width": 1200,
+  "height": 1600,
+  "title": {
+    "fa": ""
+  },
+  "caption": {
+    "fa": ""
+  },
+  "alt": {
+    "fa": ""
+  },
+  "license": "permission-granted",
+  "status": "needs-verification"
+}]
